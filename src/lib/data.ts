@@ -67,6 +67,11 @@ export type Project = {
   live?: string;
   repo?: string;
   embed: ProjectEmbedKind;
+  /** Skip the iframe attempt entirely — used when a known, current issue
+   * (e.g. a Vercel deployment-protection SSO wall) means the frame would
+   * "succeed" at loading but show the wrong thing. Flip to false once
+   * resolved. */
+  startFailed?: boolean;
   bullets: string[];
   stack: string[];
 };
@@ -77,7 +82,11 @@ export const projects: Project[] = [
     description: "Auth-as-a-Service platform",
     live: "https://sash-web.vercel.app/",
     repo: "https://github.com/sept1st2c/sash",
-    embed: "iframe",
+    // Verified: sash-web.vercel.app sends `X-Frame-Options: DENY` on every
+    // route, including the landing page, so it cannot be embedded at all
+    // (not just the auth flows). Falls back to a link card immediately.
+    embed: "iframe-fallback",
+    startFailed: true,
     bullets: [
       "Multi-tenant Auth-as-a-Service with 2FA, scalable auth, SDK integration, API-key access.",
       "Redis for session management, rate limiting, and OTP.",
@@ -100,6 +109,19 @@ export const projects: Project[] = [
     stack: ["LiveKit", "LangGraph", "Groq", "Deepgram", "Monaco", "Next.js", "Python"],
   },
   {
+    name: "Tapi",
+    description: "Link-in-bio pages connected through NFC cards",
+    live: "https://taap-saas.vercel.app/",
+    embed: "iframe-fallback",
+    bullets: [
+      "Link-in-bio / digital-identity platform with 16 content block types (links, images, PDFs, catalogs, Spotify/YouTube embeds, contact buttons).",
+      "9 pre-built themes plus custom color options, with a per-block visual editor.",
+      "Real-time analytics — views, clicks, devices, countries.",
+      "Branded short URLs (tapi.link/@username); NFC cards act as the physical tap-to-share layer.",
+    ],
+    stack: ["Next.js", "Clerk", "S3"],
+  },
+  {
     name: "Cognitive Brand Layer (LOCI)",
     description: "Brand cognition / memory-engine concept",
     live: "https://frontend-react-ruby.vercel.app/",
@@ -114,6 +136,8 @@ export const projects: Project[] = [
     description: "Computer vision / photo differentiation",
     live: "https://photo-differentiation-qtnich7zi-sept1st2cs-projects.vercel.app/",
     embed: "iframe-fallback",
+    // Currently behind Vercel deployment-protection SSO — set to false once disabled.
+    startFailed: true,
     bullets: [
       "Computer vision project differentiating and grouping visually similar photos.",
     ],
