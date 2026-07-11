@@ -1,0 +1,126 @@
+@import "tailwindcss";
+
+/*
+  Design tokens sourced from DESIGN-elevenlabs.md (colors, spacing, radii,
+  component shapes). Typography intentionally deviates per the project brief:
+  a bold grotesk system-sans stack for display/headers instead of the
+  licensed Waldenburg serif, and Inter (self-hosted via next/font) for
+  everything else. Single light theme only — no dark-mode branch.
+*/
+:root {
+  /* colors */
+  --color-primary: #292524;
+  --color-primary-active: #0c0a09;
+  --color-ink: #0c0a09;
+  --color-body: #4e4e4e;
+  --color-body-strong: #292524;
+  --color-muted: #777169;
+  --color-muted-soft: #a8a29e;
+  --color-hairline: #e7e5e4;
+  --color-hairline-soft: #f0efed;
+  --color-hairline-strong: #d6d3d1;
+  --color-canvas: #f5f5f5;
+  --color-canvas-soft: #fafafa;
+  --color-canvas-deep: #0c0a09;
+  --color-surface-card: #ffffff;
+  --color-surface-strong: #f0efed;
+  --color-on-primary: #ffffff;
+
+  /* gradient orb stops — atmospheric decoration only, never fills/text */
+  --gradient-sky: #a8c8e8;
+  --gradient-lavender: #c8b8e0;
+  --gradient-peach: #f4c5a8;
+
+  /* spacing scale */
+  --space-xxs: 4px;
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-base: 16px;
+  --space-md: 20px;
+  --space-lg: 24px;
+  --space-xl: 32px;
+  --space-xxl: 48px;
+  --space-section: 96px;
+
+  /* radii */
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-xxl: 24px;
+  --radius-pill: 9999px;
+
+  /* typography — bold grotesk for display, Inter for everything else */
+  --font-display: "Helvetica Neue", Helvetica, Arial, ui-sans-serif, sans-serif;
+
+  --background: var(--color-canvas);
+  --foreground: var(--color-ink);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-inter), ui-sans-serif, sans-serif;
+  --font-display: var(--font-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--color-canvas);
+  color: var(--color-ink);
+  font-family: var(--font-inter), ui-sans-serif, sans-serif;
+  font-weight: 400;
+  letter-spacing: 0.15px;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Bold grotesk display type — hero H1 and section headers only. */
+.font-display {
+  font-family: var(--font-display);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+/* Fixed, full-viewport, static grain layer. Pre-rendered noise tile,
+   NOT a live filter — no per-frame cost, no animation. */
+.grain-layer {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  background-image: url("/grain.png");
+  background-repeat: repeat;
+  background-size: 220px 220px;
+  mix-blend-mode: soft-light;
+  opacity: 0.05;
+}
+
+.hairline {
+  border-color: var(--color-hairline);
+}
+
+/* Very subtle hairline fade-in, respecting reduced-motion preference. */
+@media (prefers-reduced-motion: no-preference) {
+  .fade-in {
+    animation: fade-in-up 0.5s ease-out both;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
