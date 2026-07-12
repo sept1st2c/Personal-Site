@@ -30,6 +30,8 @@
   --gradient-sky: #a8c8e8;
   --gradient-lavender: #c8b8e0;
   --gradient-peach: #f4c5a8;
+  --gradient-mint: #a7e5d3;
+  --gradient-rose: #e8b8c4;
 
   /* spacing scale */
   --space-xxs: 4px;
@@ -82,6 +84,35 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+/* A thin, muted scrollbar in the site's own palette instead of the
+   browser default — applies everywhere (the page itself, and any
+   internal `overflow-y-auto` panel like the project detail modal). */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-hairline-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background-color: var(--color-hairline-strong);
+  border-radius: 9999px;
+  border: 2px solid var(--color-canvas);
+  background-clip: padding-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-muted-soft);
+  background-clip: padding-box;
+}
+
 /* Bold grotesk display type — hero H1 and section headers only. */
 .font-display {
   font-family: var(--font-display);
@@ -89,18 +120,136 @@ body {
   letter-spacing: -0.02em;
 }
 
+/* Slightly tighter tracking reserved for the single display-mega moment
+   (hero H1) so it reads a size class above the display-lg/md section
+   heads instead of just "the same bold font, bigger". */
+.tracking-display-mega {
+  letter-spacing: -0.03em;
+}
+
+/* Inter type-scale utilities matching DESIGN-elevenlabs.md's typography
+   tokens, for components that want a token applied as a single class
+   instead of repeating the size/weight/tracking triad inline. */
+.text-title-md {
+  font-weight: 500;
+  font-size: 20px;
+  line-height: 1.35;
+  letter-spacing: 0;
+}
+
+.text-title-sm {
+  font-weight: 500;
+  font-size: 18px;
+  line-height: 1.44;
+  letter-spacing: 0.18px;
+}
+
+.text-body-sm {
+  font-weight: 400;
+  font-size: 15px;
+  line-height: 1.47;
+  letter-spacing: 0.15px;
+}
+
+.text-caption {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+
+.text-caption-uppercase {
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.4;
+  letter-spacing: 0.96px;
+  text-transform: uppercase;
+}
+
+/* Nav treatment. An earlier version tinted the canvas at only 70%
+   opacity, which let scrolled headings/body copy show through strongly
+   enough to visually overlap the nav's own wordmark and links — read as
+   "the title gets mixed with the background" and "the lower opacity
+   doesn't look fine". Now near-opaque (96%) so nothing behind it shows
+   through; the blur/saturate is mostly cosmetic polish at that point,
+   and a soft shadow (rather than transparency) supplies the sense of it
+   floating above the page — a more deliberate, "classy" elevated bar
+   instead of a washed-out see-through one. */
+.nav-glass {
+  background-color: color-mix(in srgb, var(--color-canvas) 96%, transparent);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 8px 24px -16px color-mix(in srgb, var(--color-ink) 18%, transparent);
+}
+
 /* Fixed, full-viewport, static grain layer. Pre-rendered noise tile,
-   NOT a live filter — no per-frame cost, no animation. */
+   NOT a live filter — no per-frame cost, no animation.
+   Note: 0.08-0.12 (the initially requested range) measured as
+   perceptually flat here — soft-light against this near-white
+   (#f5f5f5) canvas has very little contrast headroom, so even 0.12
+   only produces a ~0.4 std-dev pixel spread (near-invisible). Verified
+   empirically (pixel-stddev sweep + zoomed screenshots): 0.4 is the
+   point where the tile actually reads as paper-grain texture while
+   still staying quiet enough not to fight body text. */
+/* z-index 9999 here (and 10000 on .above-grain below) used to badly
+   outrank the sticky nav (z-50): any normal in-flow content that opted
+   into .above-grain — every project card, every section title —
+   ended up compositing ABOVE the nav while scrolling underneath it,
+   read as "the project section gets above the navbar". Fixed by keeping
+   grain just barely above ordinary in-flow content (which needs no
+   z-index at all to sit above a fixed layer with z-index:auto) rather
+   than absurdly high — nothing on the page should ever need to out-rank
+   the nav (z-50) or a modal (z-[10000]) just to escape the grain layer. */
 .grain-layer {
   position: fixed;
   inset: 0;
-  z-index: 9999;
+  z-index: 1;
   pointer-events: none;
   background-image: url("/grain.png");
   background-repeat: repeat;
   background-size: 220px 220px;
   mix-blend-mode: soft-light;
-  opacity: 0.05;
+  opacity: 0.4;
+}
+
+/* Lifts an element just above .grain-layer — used for project
+   screenshots and section titles, which look degraded under the
+   soft-light grain blend. Kept deliberately low (nowhere near the nav's
+   z-50 or a modal's z-[10000]) — see the note on .grain-layer above for
+   why. Must be applied to whichever ancestor actually forms the
+   stacking context (a `position:fixed` element with its own z-index, or
+   one with a persistent `transform`), not an inner wrapper — z-index on
+   a descendant can't escape its own ancestor's stacking context. */
+.above-grain {
+  position: relative;
+  z-index: 2;
+  isolation: isolate;
+}
+
+/* Persistent whole-page atmosphere. Originally the hero had its own
+   single-blob GradientOrb while the rest of the page had either nothing
+   or different-looking per-section GradientWash blobs — three
+   inconsistent recipes, so the hero visibly didn't match the rest of the
+   page. This is now the ONE sitewide system: the same blended tri-color
+   recipe the hero orb used (sky -> lavender -> peach, blended together
+   rather than isolated single-hue blobs), repeated at a few anchor
+   points across a single fixed, full-viewport layer (same technique as
+   .grain-layer) so the hero and every other section share one
+   consistent atmosphere at any scroll depth. Decorative only: never a
+   button fill, text color, or section background.
+*/
+.atmosphere-layer {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 6% 0%, var(--gradient-sky), var(--gradient-lavender) 45%, var(--gradient-peach) 75%, transparent 78%),
+    radial-gradient(circle at 96% 42%, var(--gradient-sky), var(--gradient-lavender) 45%, var(--gradient-peach) 75%, transparent 78%),
+    radial-gradient(circle at 12% 92%, var(--gradient-sky), var(--gradient-lavender) 45%, var(--gradient-peach) 75%, transparent 78%);
+  background-repeat: no-repeat;
+  background-size: 640px 640px, 600px 600px, 620px 620px;
+  filter: blur(64px);
+  opacity: 0.5;
 }
 
 .hairline {
@@ -122,5 +271,39 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* Achievements photo marquee: a continuously auto-scrolling strip
+   (see AchievementsMarquee.tsx) rather than a grid, so a growing photo
+   collection never adds vertical page space. Edges fade via a mask
+   instead of a hard cut. Pauses on hover/focus (handled in the
+   component via [animation-play-state:paused]) and doesn't scroll at
+   all under reduced motion — the track just sits at rest and the
+   native `overflow-x-auto` on the wrapper lets it still be browsed by
+   drag/swipe/scroll. */
+.marquee-mask {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent);
+  mask-image: linear-gradient(to right, transparent, black 40px, black calc(100% - 40px), transparent);
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .marquee-track {
+    animation: marquee-scroll 42s linear infinite;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee-mask {
+    overflow-x: auto;
+  }
+}
+
+@keyframes marquee-scroll {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
   }
 }

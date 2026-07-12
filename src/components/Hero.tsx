@@ -1,5 +1,7 @@
-import { heroTags, person } from "@/lib/data";
-import GradientOrb from "./GradientOrb";
+import Image from "next/image";
+import { LuDownload, LuGraduationCap } from "react-icons/lu";
+import { education, heroTags, person } from "@/lib/data";
+import TechBadge from "./TechBadge";
 
 export default function Hero() {
   return (
@@ -11,67 +13,107 @@ export default function Hero() {
         paddingBottom: "var(--space-section)",
       }}
     >
-      <GradientOrb />
-
-      <div className="fade-in relative max-w-[760px]">
-        <p
-          className="mb-5 text-[12px] font-semibold uppercase"
-          style={{ color: "var(--color-muted)", letterSpacing: "0.96px" }}
-        >
-          Portfolio
-        </p>
-
-        <h1
-          className="font-display text-[44px] leading-[1.05] sm:text-[64px]"
-          style={{ color: "var(--color-ink)" }}
-        >
-          {person.name}
-        </h1>
-
-        <p
-          className="mt-6 max-w-[540px] text-[18px] leading-relaxed"
-          style={{ color: "var(--color-body)" }}
-        >
-          {person.role}
-        </p>
-
-        <div className="mt-8 flex flex-wrap gap-2">
-          {heroTags.map((tag) => (
-            <span
-              key={tag}
-              className="rounded-full px-3 py-1 text-[12px] font-semibold uppercase"
-              style={{
-                backgroundColor: "var(--color-surface-strong)",
-                color: "var(--color-ink)",
-                letterSpacing: "0.96px",
-              }}
-            >
-              {tag}
-            </span>
-          ))}
-        </div>
-
-        <div className="mt-10 flex flex-wrap items-center gap-4">
-          <a
-            href="#projects"
-            className="inline-flex h-10 items-center rounded-full px-5 text-[15px] font-medium"
-            style={{
-              backgroundColor: "var(--color-primary)",
-              color: "var(--color-on-primary)",
-            }}
-          >
-            View Work
-          </a>
-          <a
-            href="/resume.pdf"
-            className="inline-flex h-10 items-center rounded-full border px-5 text-[15px] font-medium"
+      {/* Two-column on desktop (text left, portrait right) via
+          lg:flex-row-reverse — the photo is first in markup so it stacks
+          on top on mobile/tablet, then flips to the right on lg+ without
+          needing separate mobile/desktop markup. A small 96px avatar felt
+          like an afterthought here; this gives the photo real presence. */}
+      <div className="fade-in relative flex flex-col gap-10 lg:flex-row-reverse lg:items-center lg:justify-between lg:gap-16">
+        <div className="mx-auto w-full max-w-[280px] shrink-0 sm:max-w-[320px] lg:mx-0 lg:w-[360px] lg:max-w-none">
+          <div
+            className="above-grain overflow-hidden rounded-[28px] border shadow-[0_24px_60px_-24px_rgba(12,10,9,0.28)]"
             style={{
               borderColor: "var(--color-hairline-strong)",
-              color: "var(--color-ink)",
+              backgroundColor: "var(--color-canvas-soft)",
+              aspectRatio: "4 / 5",
             }}
           >
-            Download Résumé
-          </a>
+            <Image
+              src="/shubh-gupta.jpg"
+              alt="Shubh Gupta"
+              width={720}
+              height={900}
+              className="h-full w-full object-cover"
+              priority
+            />
+          </div>
+        </div>
+
+        <div className="min-w-0 flex-1">
+          <p
+            className="text-caption-uppercase mb-5"
+            style={{ color: "var(--color-muted)" }}
+          >
+            Portfolio
+          </p>
+
+          {/* Hero H1 ~ display-mega: the largest, tightest-tracked type
+              moment on the page — visibly a size class above section heads.
+              `.above-grain` keeps it crisp where it overlaps the atmosphere
+              gradient — without it, the soft-light grain blend directly on
+              the dark text pixels reads as a faint, washed-out tint there. */}
+          <h1
+            className="above-grain font-display tracking-display-mega text-[36px] leading-[1.05] sm:text-[52px] lg:text-[60px]"
+            style={{ color: "var(--color-ink)" }}
+          >
+            {person.name}
+          </h1>
+
+          {/* Role subhead ~ title-sm: a real step down from the hero, and a
+              step up from body copy — was a plain body paragraph before. */}
+          <p
+            className="text-title-sm mt-6 max-w-[540px]"
+            style={{ color: "var(--color-body)" }}
+          >
+            {person.role}
+          </p>
+
+          {/* Education: set high (right under the role line, not buried at
+              the bottom) and styled with real weight instead of a tiny
+              muted caption, per the site owner's request. */}
+          <div className="mt-5 flex items-center gap-2.5">
+            <LuGraduationCap
+              size={20}
+              aria-hidden="true"
+              style={{ color: "var(--color-ink)", flexShrink: 0 }}
+            />
+            <p className="text-title-sm" style={{ color: "var(--color-body-strong)" }}>
+              {education.school} — {education.degree} · {education.cgpa}
+            </p>
+          </div>
+
+          <div className="mt-8 flex flex-wrap gap-2">
+            {heroTags.map((tag) => (
+              <TechBadge key={tag} label={tag} />
+            ))}
+          </div>
+
+          {/* Download Résumé is the emphasized/primary action here — the
+              site owner flagged the outline treatment as getting too little
+              attention. "View Work" steps back to the outline slot. */}
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <a
+              href="/resume.pdf"
+              className="inline-flex h-11 items-center gap-2 rounded-full px-6 text-[15px] font-semibold"
+              style={{
+                backgroundColor: "var(--color-primary)",
+                color: "var(--color-on-primary)",
+              }}
+            >
+              <LuDownload size={17} aria-hidden="true" />
+              Download Résumé
+            </a>
+            <a
+              href="#projects"
+              className="inline-flex h-11 items-center rounded-full border px-6 text-[15px] font-medium"
+              style={{
+                borderColor: "var(--color-hairline-strong)",
+                color: "var(--color-ink)",
+              }}
+            >
+              View Work
+            </a>
+          </div>
         </div>
       </div>
     </section>

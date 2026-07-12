@@ -26,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} h-full antialiased`}>
       <body className="min-h-full flex flex-col">
+        <div className="atmosphere-layer" aria-hidden="true" />
         <div className="grain-layer" aria-hidden="true" />
         {children}
       </body>

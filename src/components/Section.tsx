@@ -37,8 +37,12 @@ export default function Section({
             </p>
           )}
           {title && (
+            // .above-grain: without it, the grain layer's soft-light blend
+            // sits directly on this dark text and reads as a faint,
+            // washed-out tint wherever the atmosphere gradient underneath
+            // is strong — the "titles getting low opacity" complaint.
             <h2
-              className="font-display text-[32px] sm:text-[36px]"
+              className="above-grain font-display text-[32px] sm:text-[36px]"
               style={{ color: "var(--color-ink)" }}
             >
               {title}

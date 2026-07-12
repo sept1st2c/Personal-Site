@@ -4,11 +4,9 @@ import { nav } from "@/lib/data";
 export default function Nav() {
   return (
     <header
-      className="sticky top-0 z-50 w-full border-b"
+      className="nav-glass sticky top-0 z-50 w-full border-b"
       style={{
-        backgroundColor: "color-mix(in srgb, var(--color-canvas) 92%, transparent)",
         borderColor: "var(--color-hairline)",
-        backdropFilter: "blur(6px)",
       }}
     >
       <div className="mx-auto flex h-16 max-w-[1200px] items-center justify-between px-6">
