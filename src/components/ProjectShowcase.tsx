@@ -11,14 +11,12 @@ const INITIAL_COUNT = 3;
 
 /**
  * Straightforward project showcase: every project renders as a card in a
- * responsive grid — no dial/selector, no single-focus state to page
- * through. Only the first `INITIAL_COUNT` show by default (six full
- * project write-ups made the section feel very long); a "Show more"
- * toggle reveals the rest. The first and last visible project render as
- * wider "bookend" tiles spanning both columns (see `featured` on
- * ProjectCard) so the grid reads as considered rather than a flat dump —
- * recomputed against whatever's currently visible, not always the true
- * first/last of the full list.
+ * responsive grid, all the same shape — no dial/selector, no
+ * single-focus state to page through, no "featured" wide bookend tiles
+ * (that alternating stacked/split/stacked layout left noticeable plain
+ * space next to shorter write-ups; see ProjectCard's note). Only the
+ * first `INITIAL_COUNT` show by default (six full project write-ups made
+ * the section feel very long); a "Show more" toggle reveals the rest.
  *
  * Clicking a card (or its "Explore project" button) opens that project's
  * full case study in a modal, tracked by `expandedSlug`.
@@ -64,11 +62,17 @@ export default function ProjectShowcase() {
             initial={reduceMotion || i < INITIAL_COUNT ? false : { opacity: 0, y: 14 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className={i === 0 || i === visible.length - 1 ? "sm:col-span-2" : ""}
+            // .above-grain here, not just on ProjectCard's inner root: the
+            // `animate={{ y: 0 }}` above leaves a persistent non-"none"
+            // `transform` on this wrapper, which makes IT a stacking
+            // context root — silently trapping ProjectCard's own
+            // .above-grain inside a context that never reaches the
+            // root-level .grain-layer at all (same bug class found in
+            // Hero.tsx's .fade-in wrapper).
+            className="above-grain"
           >
             <ProjectCard
               project={project}
-              featured={i === 0 || i === visible.length - 1}
               expanded={expandedSlug === project.slug}
               onExpand={() => setExpandedSlug(project.slug)}
             />

@@ -18,7 +18,16 @@ export default function Hero() {
           on top on mobile/tablet, then flips to the right on lg+ without
           needing separate mobile/desktop markup. A small 96px avatar felt
           like an afterthought here; this gives the photo real presence. */}
-      <div className="fade-in relative flex flex-col gap-10 lg:flex-row-reverse lg:items-center lg:justify-between lg:gap-16">
+      {/* .above-grain here (not just on the photo/H1 individually) matters:
+          .fade-in's entrance animation ends on `transform: translateY(0)` —
+          a non-"none" transform value, which per spec makes this div a
+          stacking-context root on its own regardless of z-index. That
+          silently trapped the photo's and H1's own .above-grain (z-index:2)
+          inside a LOCAL context that never gets compared against the
+          root-level .grain-layer at all, so grain still rendered on top of
+          the photo despite it. Elevating this outer boundary is what
+          actually lets everything inside escape grain. */}
+      <div className="above-grain fade-in flex flex-col gap-10 lg:flex-row-reverse lg:items-center lg:justify-between lg:gap-16">
         <div className="mx-auto w-full max-w-[280px] shrink-0 sm:max-w-[320px] lg:mx-0 lg:w-[360px] lg:max-w-none">
           <div
             className="above-grain overflow-hidden rounded-[28px] border shadow-[0_24px_60px_-24px_rgba(12,10,9,0.28)]"
@@ -40,11 +49,14 @@ export default function Hero() {
         </div>
 
         <div className="min-w-0 flex-1">
-          <p
-            className="text-caption-uppercase mb-5"
-            style={{ color: "var(--color-muted)" }}
-          >
-            Portfolio
+          {/* A plain "Portfolio" label read as a dry section tag; a
+              conversational opener suits the hero better. Bumped past
+              caption size and off the tracked-uppercase treatment (which
+              would've made "Hey, I'm" read like a stiff eyebrow label, not
+              a greeting), with "Hey" carrying the ink color as the one bit
+              of emphasis in the line. */}
+          <p className="mb-4 text-[19px]" style={{ color: "var(--color-body)" }}>
+            <span style={{ color: "var(--color-ink)", fontWeight: 600 }}>Hey,</span> I&rsquo;m
           </p>
 
           {/* Hero H1 ~ display-mega: the largest, tightest-tracked type
@@ -70,15 +82,25 @@ export default function Hero() {
 
           {/* Education: set high (right under the role line, not buried at
               the bottom) and styled with real weight instead of a tiny
-              muted caption, per the site owner's request. */}
+              muted caption, per the site owner's request. The school name
+              carries the emphasis; the degree/CGPA detail steps back to a
+              lighter weight and muted color so it reads as supporting
+              detail, not competing with "Bennett University" for
+              attention. */}
           <div className="mt-5 flex items-center gap-2.5">
             <LuGraduationCap
               size={20}
               aria-hidden="true"
               style={{ color: "var(--color-ink)", flexShrink: 0 }}
             />
-            <p className="text-title-sm" style={{ color: "var(--color-body-strong)" }}>
-              {education.school} — {education.degree} · {education.cgpa}
+            <p className="text-title-sm">
+              <span style={{ color: "var(--color-body-strong)", fontWeight: 600 }}>
+                {education.school}
+              </span>
+              <span style={{ color: "var(--color-muted)", fontWeight: 400 }}>
+                {" "}
+                — {education.degree} · {education.cgpa}
+              </span>
             </p>
           </div>
 
@@ -112,6 +134,16 @@ export default function Hero() {
               }}
             >
               View Work
+            </a>
+            <a
+              href="#experience"
+              className="inline-flex h-11 items-center rounded-full border px-6 text-[15px] font-medium"
+              style={{
+                borderColor: "var(--color-hairline-strong)",
+                color: "var(--color-ink)",
+              }}
+            >
+              Experience
             </a>
           </div>
         </div>

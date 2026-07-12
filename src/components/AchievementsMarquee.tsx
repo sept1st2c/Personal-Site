@@ -18,7 +18,14 @@ export default function AchievementsMarquee() {
 
   return (
     <div
-      className="marquee-mask group relative mt-10 -mx-6 overflow-hidden px-6 sm:-mx-0 sm:px-0"
+      // .above-grain here matters, not just on each thumbnail: the mask
+      // (mask-image) on .marquee-mask and the continuous scroll animation
+      // on .marquee-track both make their own element a stacking-context
+      // root, which traps each thumbnail's own .above-grain inside a
+      // LOCAL context that never reaches the root-level .grain-layer at
+      // all (same bug class as Hero.tsx's .fade-in wrapper). Elevating
+      // this outermost boundary is what actually lets it escape.
+      className="above-grain marquee-mask group relative mt-10 -mx-6 overflow-hidden px-6 sm:-mx-0 sm:px-0"
       aria-label="Photos from talks, hackathons, and community events"
     >
       <div className="marquee-track flex w-max gap-3 group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]">

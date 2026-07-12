@@ -71,42 +71,45 @@ export default function LinkedInPosts() {
               href={post.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="group flex flex-col justify-between gap-6 rounded-2xl border p-6 transition-colors hover:bg-[var(--color-surface-strong)]"
+              className="group above-grain flex flex-col justify-between overflow-hidden rounded-2xl border transition-colors hover:bg-[var(--color-surface-strong)]"
               style={{
                 borderColor: "var(--color-hairline)",
                 backgroundColor: "var(--color-surface-card)",
               }}
             >
-              <div>
-                <div
-                  className="mb-4 flex h-9 w-9 items-center justify-center rounded-full"
-                  style={{ backgroundColor: "var(--color-surface-strong)" }}
-                  aria-hidden="true"
-                >
-                  <LinkedInGlyph />
-                </div>
-                <p
-                  className="text-caption-uppercase mb-2"
-                  style={{ color: "var(--color-muted)" }}
-                >
-                  {post.topic}
-                </p>
-                <p
-                  className="text-[14px] leading-relaxed"
-                  style={{ color: "var(--color-body)" }}
-                >
-                  {post.excerpt}
-                </p>
-              </div>
-              <span
-                className="inline-flex items-center gap-1.5 text-[13px] font-medium"
-                style={{ color: "var(--color-ink)" }}
+              <div
+                className="w-full overflow-hidden border-b"
+                style={{ borderColor: "var(--color-hairline)", backgroundColor: "var(--color-canvas-soft)" }}
               >
-                Read full post on LinkedIn
-                <span className="transition-transform group-hover:translate-x-1" aria-hidden="true">
-                  ↗
+                {/* eslint-disable-next-line @next/next/no-img-element -- a real screenshot of the post's own header, captured once at build time */}
+                <img src={post.image} alt={`${post.topic} — LinkedIn post preview`} className="block w-full" />
+              </div>
+
+              <div className="flex flex-1 flex-col gap-6 p-6">
+                <div>
+                  <p
+                    className="text-caption-uppercase mb-2"
+                    style={{ color: "var(--color-muted)" }}
+                  >
+                    {post.topic}
+                  </p>
+                  <p
+                    className="text-[14px] leading-relaxed"
+                    style={{ color: "var(--color-body)" }}
+                  >
+                    {post.excerpt}
+                  </p>
+                </div>
+                <span
+                  className="inline-flex items-center gap-1.5 text-[13px] font-medium"
+                  style={{ color: "var(--color-ink)" }}
+                >
+                  Read full post on LinkedIn
+                  <span className="transition-transform group-hover:translate-x-1" aria-hidden="true">
+                    ↗
+                  </span>
                 </span>
-              </span>
+              </div>
             </a>
           ))}
         </div>
