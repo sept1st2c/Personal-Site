@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { person } from "@/lib/data";
 import Section from "./Section";
 import type { ActivityResult, DayActivity } from "@/lib/activity";
@@ -150,13 +150,31 @@ function Heatmap({ days }: { days: DayActivity[] }) {
   const weeks = useMemo(() => buildWeeks(days), [days]);
   const labels = useMemo(() => monthLabels(weeks), [weeks]);
   const [activeKey, setActiveKey] = useState<string | null>(null);
+  const scrollerRef = useRef<HTMLDivElement>(null);
 
   const totalCommits = days.reduce((s, d) => s + d.commits, 0);
   const totalSubmissions = days.reduce((s, d) => s + d.submissions, 0);
 
+  // The full 12-month grid is wider than a phone screen, so it scrolls
+  // horizontally — but left-to-right chronological order means the
+  // *most recent* (most relevant) activity sits off-screen to the right
+  // by default. Scroll straight to it on mount instead of leaving it
+  // hidden behind an undiscoverable swipe.
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+    el.scrollLeft = el.scrollWidth;
+  }, [weeks]);
+
   return (
     <div>
-      <div className="overflow-x-auto pb-2">
+      {/* .above-grain on the scroller itself, not just the cell buttons:
+          .scroll-fade-left's mask-image makes this div a stacking-context
+          root on its own, which would otherwise trap the buttons'
+          individual .above-grain inside a context that sits below
+          .grain-layer (same bug class documented in globals.css and
+          AchievementsMarquee). */}
+      <div ref={scrollerRef} className="above-grain scroll-fade-left overflow-x-auto pb-2">
         <div style={{ width: weeks.length * (CELL + GAP) }}>
           {/* Month labels */}
           <div className="mb-1 flex" style={{ gap: GAP }}>

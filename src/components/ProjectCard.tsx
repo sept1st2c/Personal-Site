@@ -1,56 +1,76 @@
 "use client";
 
+import { motion } from "framer-motion";
 import { SiGithub } from "react-icons/si";
 import type { Project } from "@/lib/data";
 import StackPill from "./StackPill";
 import ProjectGlyph from "./ProjectGlyph";
 
 /**
- * A single project tile in the grid showcase. Every card uses the same
- * layout — screenshot on top at a fixed `aspect-[16/10]`, copy below.
+ * A single project tile in the grid showcase. Two layout variants:
  *
- * An earlier version gave the first/last project a wider "featured"
- * two-column split (image left, copy right) to bookend the grid. Dropped
- * it: with no explicit height tying the two columns together, the image
- * side ended up sized by nothing but the (usually taller) copy side,
- * leaving a lot of plain empty space next to shorter write-ups — visibly
- * inconsistent going stacked -> split -> stacked down the grid. One
- * consistent layout for every tile reads cleaner and fixes that outright.
+ * - Default: stacked — screenshot on top (fixed `aspect-[16/10]`), copy
+ *   below.
+ * - `featured`: a wider two-column split at `sm+` (image left, copy
+ *   right) spanning both grid columns — used only for the one card that
+ *   would otherwise be left alone in its row (an odd visible count in a
+ *   2-up grid), so it fills the row instead of leaving the other half
+ *   blank. An earlier version of this stretched the image to `h-full` of
+ *   an undefined parent height, which resolved to near-zero and left a
+ *   lot of empty space next to the copy column. Fixed by giving the
+ *   image a real intrinsic height via `aspect-[4/3]` on its own width
+ *   instead, and vertically centering the copy column so any leftover
+ *   height reads as intentional breathing room, not a bug.
  *
- * `.above-grain` is applied directly to this component's root element
- * (the `<article>`): that class sets `position: relative; z-index: 2;
- * isolation: isolate`, which is enough on its own to form a new stacking
- * context above the fixed `.grain-layer`.
+ * `layout` (from framer-motion) on the root and on the image/copy
+ * containers lets ProjectShowcase animate a card smoothly between the
+ * featured and stacked shapes when "Show more" changes which card (if
+ * any) is the odd one out, instead of it snapping between two very
+ * different box shapes.
+ *
+ * `.above-grain` is applied directly to this component's root element:
+ * that class sets `position: relative; z-index: 2; isolation: isolate`,
+ * which is enough on its own to form a new stacking context above the
+ * fixed `.grain-layer`.
  */
 export default function ProjectCard({
   project,
+  featured = false,
   expanded,
   onExpand,
 }: {
   project: Project;
+  featured?: boolean;
   expanded: boolean;
   onExpand: () => void;
 }) {
   const hero = project.screenshots[0];
-  const maxPills = 4;
+  const maxPills = featured ? 6 : 4;
 
   return (
-    <article
-      className="above-grain group relative flex h-full flex-col overflow-hidden rounded-3xl border transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_-16px_rgba(12,10,9,0.22)]"
+    <motion.article
+      layout
+      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+      className={`above-grain group relative flex h-full flex-col overflow-hidden rounded-3xl border transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_-16px_rgba(12,10,9,0.22)] ${
+        featured ? "sm:flex-row" : ""
+      }`}
       style={{
         borderColor: "var(--color-hairline)",
         backgroundColor: "var(--color-surface-card)",
       }}
     >
-      <button
+      <motion.button
+        layout
         type="button"
         onClick={onExpand}
         aria-label={`Expand ${project.name} case study`}
-        className="relative block w-full text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px]"
+        className={`relative block text-left focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-[-2px] ${
+          featured ? "sm:w-[42%] sm:shrink-0" : "w-full"
+        }`}
         style={{ outlineColor: "var(--color-ink)" }}
       >
         <div
-          className="relative aspect-[16/10] w-full overflow-hidden"
+          className={`relative w-full overflow-hidden ${featured ? "aspect-[16/10] sm:aspect-[4/3]" : "aspect-[16/10]"}`}
           style={{ backgroundColor: "var(--color-canvas-soft)" }}
         >
           {hero && !expanded && (
@@ -75,10 +95,16 @@ export default function ProjectCard({
             <span aria-hidden="true">↗</span>
           </div>
         </div>
-      </button>
+      </motion.button>
 
-      <div className="flex flex-1 flex-col p-6 sm:p-7">
-        <h3 className="font-display text-[22px] sm:text-[24px]" style={{ color: "var(--color-ink)" }}>
+      <motion.div
+        layout
+        className={`flex flex-1 flex-col p-6 sm:p-7 ${featured ? "justify-center" : ""}`}
+      >
+        <h3
+          className={`font-display ${featured ? "text-[26px] sm:text-[30px]" : "text-[22px] sm:text-[24px]"}`}
+          style={{ color: "var(--color-ink)" }}
+        >
           {project.name}
         </h3>
         <p className="mt-2 text-[14px] leading-relaxed" style={{ color: "var(--color-muted)" }}>
@@ -99,7 +125,7 @@ export default function ProjectCard({
           )}
         </div>
 
-        <div className="mt-auto flex flex-wrap items-center gap-4 pt-6">
+        <div className={`flex flex-wrap items-center gap-4 ${featured ? "mt-6" : "mt-auto pt-6"}`}>
           <button
             type="button"
             onClick={onExpand}
@@ -134,7 +160,7 @@ export default function ProjectCard({
             </a>
           )}
         </div>
-      </div>
-    </article>
+      </motion.div>
+    </motion.article>
   );
 }

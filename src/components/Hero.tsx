@@ -56,7 +56,10 @@ export default function Hero() {
               a greeting), with "Hey" carrying the ink color as the one bit
               of emphasis in the line. */}
           <p className="mb-4 text-[19px]" style={{ color: "var(--color-body)" }}>
-            <span style={{ color: "var(--color-ink)", fontWeight: 600 }}>Hey,</span> I&rsquo;m
+            <span style={{ color: "var(--color-ink)", fontWeight: 600, marginRight: "0.35em" }}>
+              Hey,
+            </span>
+            I&rsquo;m
           </p>
 
           {/* Hero H1 ~ display-mega: the largest, tightest-tracked type

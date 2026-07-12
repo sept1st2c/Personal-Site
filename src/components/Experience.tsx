@@ -44,7 +44,7 @@ export default function Experience() {
                     <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
                       <h3
                         className="text-title-md"
-                        style={{ color: "var(--color-ink)" }}
+                        style={{ color: "var(--color-ink)", fontWeight: 700 }}
                       >
                         {item.company}
                         <span

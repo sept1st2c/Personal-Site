@@ -299,6 +299,16 @@ body {
   }
 }
 
+/* Left-only fade for the activity heatmap's horizontal scroller: it
+   auto-scrolls to its right edge (today's cell) on load, so fading that
+   same edge would immediately clip the exact cell just scrolled to.
+   Only the left side (older, already-scrolled-past months) fades, hinting
+   there's more history to swipe back through. */
+.scroll-fade-left {
+  -webkit-mask-image: linear-gradient(to right, transparent, black 32px);
+  mask-image: linear-gradient(to right, transparent, black 32px);
+}
+
 @keyframes marquee-scroll {
   from {
     transform: translateX(0);

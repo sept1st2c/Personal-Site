@@ -78,11 +78,15 @@ export default function LinkedInPosts() {
               }}
             >
               <div
-                className="w-full overflow-hidden border-b"
+                className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden border-b p-4"
                 style={{ borderColor: "var(--color-hairline)", backgroundColor: "var(--color-canvas-soft)" }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element -- a real screenshot of the post's own header, captured once at build time */}
-                <img src={post.image} alt={`${post.topic} — LinkedIn post preview`} className="block w-full" />
+                {/* eslint-disable-next-line @next/next/no-img-element -- the real photo/diagram attached to the post itself, downloaded once as a static asset */}
+                <img
+                  src={post.image}
+                  alt={`${post.topic} — image attached to the LinkedIn post`}
+                  className="h-full w-full object-contain"
+                />
               </div>
 
               <div className="flex flex-1 flex-col gap-6 p-6">
