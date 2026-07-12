@@ -8,3 +8,4 @@ export * from "./data/projects";
 export * from "./data/skills";
 export * from "./data/achievements";
 export * from "./data/education";
+export * from "./data/about";

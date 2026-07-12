@@ -6,6 +6,9 @@ export const person = {
   github: "https://github.com/sept1st2c",
   leetcode: "https://leetcode.com/u/sept1c/",
   githubUsername: "sept1st2c",
+  // Not yet provided — the X icon in Hero/SocialLinks only renders once this
+  // is a real handle URL (see SocialLinks.tsx's conditional).
+  twitter: "",
 };
 
 export const heroTags = [
@@ -27,6 +30,7 @@ export const heroTags = [
 ];
 
 export const nav = [
+  { label: "About", href: "#about" },
   { label: "Work", href: "#projects" },
   { label: "Experience", href: "#experience" },
   { label: "Achievements", href: "#achievements" },

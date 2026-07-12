@@ -2,6 +2,7 @@ import Image from "next/image";
 import { LuDownload, LuGraduationCap } from "react-icons/lu";
 import { education, heroTags, person } from "@/lib/data";
 import TechBadge from "./TechBadge";
+import SocialLinks from "./SocialLinks";
 
 export default function Hero() {
   return (
@@ -28,7 +29,11 @@ export default function Hero() {
           the photo despite it. Elevating this outer boundary is what
           actually lets everything inside escape grain. */}
       <div className="above-grain fade-in flex flex-col gap-10 lg:flex-row-reverse lg:items-center lg:justify-between lg:gap-16">
-        <div className="mx-auto w-full max-w-[280px] shrink-0 sm:max-w-[320px] lg:mx-0 lg:w-[360px] lg:max-w-none">
+        {/* Smaller on phones on purpose: the photo doesn't need to dominate
+            the fold there — the info below it (name, role, tags, CTAs) is
+            what a cold-outreach recipient actually came to scan, so it gets
+            priority over a large portrait on narrow viewports. */}
+        <div className="mx-auto w-full max-w-[180px] shrink-0 sm:max-w-[260px] lg:mx-0 lg:w-[360px] lg:max-w-none">
           <div
             className="above-grain overflow-hidden rounded-[28px] border shadow-[0_24px_60px_-24px_rgba(12,10,9,0.28)]"
             style={{
@@ -83,30 +88,6 @@ export default function Hero() {
             {person.role}
           </p>
 
-          {/* Education: set high (right under the role line, not buried at
-              the bottom) and styled with real weight instead of a tiny
-              muted caption, per the site owner's request. The school name
-              carries the emphasis; the degree/CGPA detail steps back to a
-              lighter weight and muted color so it reads as supporting
-              detail, not competing with "Bennett University" for
-              attention. */}
-          <div className="mt-5 flex items-center gap-2.5">
-            <LuGraduationCap
-              size={20}
-              aria-hidden="true"
-              style={{ color: "var(--color-ink)", flexShrink: 0 }}
-            />
-            <p className="text-title-sm">
-              <span style={{ color: "var(--color-body-strong)", fontWeight: 600 }}>
-                {education.school}
-              </span>
-              <span style={{ color: "var(--color-muted)", fontWeight: 400 }}>
-                {" "}
-                — {education.degree} · {education.cgpa}
-              </span>
-            </p>
-          </div>
-
           <div className="mt-8 flex flex-wrap gap-2">
             {heroTags.map((tag) => (
               <TechBadge key={tag} label={tag} />
@@ -148,6 +129,32 @@ export default function Hero() {
             >
               Experience
             </a>
+          </div>
+
+          <div className="mt-6">
+            <SocialLinks />
+          </div>
+
+          {/* Education: moved below the CTAs/socials per the site owner's
+              request (it previously sat right under the role line). Same
+              treatment as before — school name carries the emphasis, the
+              degree/CGPA detail steps back to a lighter weight and muted
+              color so it reads as supporting detail. */}
+          <div className="mt-6 flex items-center gap-2.5">
+            <LuGraduationCap
+              size={20}
+              aria-hidden="true"
+              style={{ color: "var(--color-ink)", flexShrink: 0 }}
+            />
+            <p className="text-title-sm">
+              <span style={{ color: "var(--color-body-strong)", fontWeight: 600 }}>
+                {education.school}
+              </span>
+              <span style={{ color: "var(--color-muted)", fontWeight: 400 }}>
+                {" "}
+                — {education.degree} · {education.cgpa}
+              </span>
+            </p>
           </div>
         </div>
       </div>
