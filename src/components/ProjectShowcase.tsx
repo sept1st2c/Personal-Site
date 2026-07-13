@@ -183,18 +183,28 @@ export default function ProjectShowcase() {
               // continuously-repeating "ping" ring behind a static count
               // pill, same visual language notification badges use for
               // "there's something here you haven't seen yet".
-              <span className="pointer-events-none absolute -right-1.5 -top-1.5 flex h-[18px] w-[18px]">
+              <span className="pointer-events-none absolute -right-2 -top-2 flex h-5 w-5">
                 {!reduceMotion && (
+                  // Peak opacity bumped well past the first attempt (0.55
+                  // -> 0.85): sampled the running animation's *computed*
+                  // opacity frame-by-frame and at a scale of ~1.4 (about a
+                  // third into the cycle) it had already decayed to ~0.3,
+                  // which is barely perceptible at only 20px — the ring
+                  // was technically animating the whole time but too
+                  // faint at any given instant to actually read as a
+                  // pulse. Starting darker keeps a visible ring further
+                  // into the cycle instead of it vanishing almost
+                  // immediately.
                   <motion.span
                     aria-hidden="true"
                     className="absolute inline-flex h-full w-full rounded-full"
                     style={{ backgroundColor: "var(--color-primary)" }}
-                    animate={{ scale: [1, 1.9], opacity: [0.55, 0] }}
-                    transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
+                    animate={{ scale: [1, 2], opacity: [0.85, 0] }}
+                    transition={{ duration: 1.6, repeat: Infinity, ease: "easeOut" }}
                   />
                 )}
                 <span
-                  className="relative inline-flex h-[18px] w-[18px] items-center justify-center rounded-full text-[10px] font-semibold leading-none"
+                  className="relative inline-flex h-5 w-5 items-center justify-center rounded-full text-[11px] font-semibold leading-none"
                   style={{ backgroundColor: "var(--color-primary)", color: "var(--color-on-primary)" }}
                 >
                   {hiddenCount}

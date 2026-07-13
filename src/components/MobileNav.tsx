@@ -44,8 +44,19 @@ export default function MobileNav({
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: -8, scale: 0.98 }}
           transition={transition}
-          style={{ transformOrigin: "top center", borderColor: "var(--color-hairline)" }}
-          className="nav-glass absolute inset-x-0 top-full z-50 border-b sm:hidden"
+          // Fully opaque here (not .nav-glass's 96%) on purpose: this panel
+          // can land directly over the hero photo on first paint, and even
+          // 4% transparency + blur was enough to show a faint hazy outline
+          // of a high-contrast dark photo bleeding through underneath the
+          // menu text. A dropdown overlay reads fine fully solid; it's only
+          // the persistent top bar that benefits from the glass treatment.
+          style={{
+            transformOrigin: "top center",
+            borderColor: "var(--color-hairline)",
+            backgroundColor: "var(--color-canvas)",
+            boxShadow: "0 16px 32px -20px color-mix(in srgb, var(--color-ink) 24%, transparent)",
+          }}
+          className="absolute inset-x-0 top-full z-50 border-b sm:hidden"
         >
           <nav className="mx-auto flex max-w-[1200px] flex-col gap-1 px-6 py-4">
             {nav.map((item) => (

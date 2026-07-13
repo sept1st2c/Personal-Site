@@ -56,9 +56,9 @@ function tooltipLabel(day: DayActivity): string {
     parts.push(`${day.submissions} submission${day.submissions === 1 ? "" : "s"}`);
   }
   if (parts.length === 0) {
-    return `${dateLabel} — no activity`;
+    return `${dateLabel} · no activity`;
   }
-  return `${dateLabel} — ${parts.join(" · ")}`;
+  return `${dateLabel} · ${parts.join(" · ")}`;
 }
 
 /** Group the flat, chronologically-ascending day list into Sun–Sat week
