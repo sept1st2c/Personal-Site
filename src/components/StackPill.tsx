@@ -55,7 +55,7 @@ export default function StackPill({
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full font-medium ${padding}`}
+      className={`inline-flex items-center gap-1.5 rounded-full font-medium transition-transform duration-200 hover:scale-105 ${padding}`}
       style={{
         backgroundColor: "var(--color-surface-strong)",
         color: "var(--color-body)",

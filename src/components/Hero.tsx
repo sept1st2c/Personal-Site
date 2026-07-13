@@ -1,8 +1,9 @@
 import Image from "next/image";
-import { LuDownload, LuGraduationCap } from "react-icons/lu";
+import { LuFileText, LuGraduationCap } from "react-icons/lu";
 import { education, heroTags, person } from "@/lib/data";
-import TechBadge from "./TechBadge";
+import HeroTags from "./HeroTags";
 import SocialLinks from "./SocialLinks";
+import ResumeButton from "./ResumeButton";
 
 export default function Hero() {
   return (
@@ -99,30 +100,28 @@ export default function Hero() {
             {person.role}
           </p>
 
-          <div className="order-5 mt-8 flex flex-wrap gap-2 sm:order-4">
-            {heroTags.map((tag) => (
-              <TechBadge key={tag} label={tag} />
-            ))}
-          </div>
+          <HeroTags tags={heroTags} />
 
-          {/* Download Résumé is the emphasized/primary action here — the
-              site owner flagged the outline treatment as getting too little
-              attention. "View Work" steps back to the outline slot. */}
+          {/* Résumé is the emphasized/primary action here — the site owner
+              flagged the outline treatment as getting too little attention.
+              "View Work" steps back to the outline slot. Opens an in-page
+              preview (ResumeButton) rather than navigating away to the raw
+              PDF, with "download" as its own explicit action inside that
+              preview instead of being the only thing this button did. */}
           <div className="order-6 mt-10 flex flex-wrap items-center gap-4 sm:order-5">
-            <a
-              href="/resume.pdf"
-              className="inline-flex h-11 items-center gap-2 rounded-full px-6 text-[15px] font-semibold"
+            <ResumeButton
+              className="hover-lift inline-flex h-11 items-center gap-2 rounded-full px-6 text-[15px] font-semibold"
               style={{
                 backgroundColor: "var(--color-primary)",
                 color: "var(--color-on-primary)",
               }}
             >
-              <LuDownload size={17} aria-hidden="true" />
-              Download Résumé
-            </a>
+              <LuFileText size={17} aria-hidden="true" />
+              View Résumé
+            </ResumeButton>
             <a
               href="#projects"
-              className="inline-flex h-11 items-center rounded-full border px-6 text-[15px] font-medium"
+              className="hover-lift inline-flex h-11 items-center rounded-full border px-6 text-[15px] font-medium"
               style={{
                 borderColor: "var(--color-hairline-strong)",
                 color: "var(--color-ink)",
@@ -132,7 +131,7 @@ export default function Hero() {
             </a>
             <a
               href="#experience"
-              className="inline-flex h-11 items-center rounded-full border px-6 text-[15px] font-medium"
+              className="hover-lift inline-flex h-11 items-center rounded-full border px-6 text-[15px] font-medium"
               style={{
                 borderColor: "var(--color-hairline-strong)",
                 color: "var(--color-ink)",

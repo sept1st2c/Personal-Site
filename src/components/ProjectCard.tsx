@@ -164,7 +164,7 @@ export default function ProjectCard({
           <button
             type="button"
             onClick={onExpand}
-            className="inline-flex h-9 items-center rounded-full px-4 text-[13px] font-medium"
+            className="hover-lift inline-flex h-9 items-center rounded-full px-4 text-[13px] font-medium"
             style={{ backgroundColor: "var(--color-primary)", color: "var(--color-on-primary)" }}
           >
             Explore project
@@ -175,7 +175,7 @@ export default function ProjectCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="text-[13px] font-medium"
+              className="link-underline text-[13px] font-medium"
               style={{ color: "var(--color-ink)" }}
             >
               Live ↗
@@ -187,7 +187,7 @@ export default function ProjectCard({
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1.5 text-[13px] font-medium"
+              className="link-underline inline-flex items-center gap-1.5 text-[13px] font-medium"
               style={{ color: "var(--color-ink)" }}
             >
               <SiGithub size={14} aria-hidden="true" />

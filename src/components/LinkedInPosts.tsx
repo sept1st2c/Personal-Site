@@ -1,5 +1,6 @@
 import { linkedinPosts } from "@/lib/data/linkedin";
 import Section from "./Section";
+import Reveal from "./Reveal";
 
 // Standard public "recent activity" URL for a LinkedIn profile. Kept as a
 // local constant (rather than sourced from the shared person data) so this
@@ -65,56 +66,57 @@ export default function LinkedInPosts() {
     <Section id="linkedin" label="Elsewhere" title="Latest on LinkedIn">
       {hasPosts ? (
         <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-          {linkedinPosts.slice(0, 3).map((post) => (
-            <a
-              key={post.url}
-              href={post.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="group above-grain flex flex-col justify-between overflow-hidden rounded-2xl border transition-colors hover:bg-[var(--color-surface-strong)]"
-              style={{
-                borderColor: "var(--color-hairline)",
-                backgroundColor: "var(--color-surface-card)",
-              }}
-            >
-              <div
-                className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden border-b p-4"
-                style={{ borderColor: "var(--color-hairline)", backgroundColor: "var(--color-canvas-soft)" }}
+          {linkedinPosts.slice(0, 3).map((post, i) => (
+            <Reveal key={post.url} delay={i * 0.08}>
+              <a
+                href={post.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="hover-lift group flex flex-col justify-between overflow-hidden rounded-2xl border transition-colors hover:bg-[var(--color-surface-strong)]"
+                style={{
+                  borderColor: "var(--color-hairline)",
+                  backgroundColor: "var(--color-surface-card)",
+                }}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element -- the real photo/diagram attached to the post itself, downloaded once as a static asset */}
-                <img
-                  src={post.image}
-                  alt={`${post.topic} — image attached to the LinkedIn post`}
-                  className="h-full w-full object-contain"
-                />
-              </div>
-
-              <div className="flex flex-1 flex-col gap-6 p-6">
-                <div>
-                  <p
-                    className="text-caption-uppercase mb-2"
-                    style={{ color: "var(--color-muted)" }}
-                  >
-                    {post.topic}
-                  </p>
-                  <p
-                    className="text-[14px] leading-relaxed"
-                    style={{ color: "var(--color-body)" }}
-                  >
-                    {post.excerpt}
-                  </p>
-                </div>
-                <span
-                  className="inline-flex items-center gap-1.5 text-[13px] font-medium"
-                  style={{ color: "var(--color-ink)" }}
+                <div
+                  className="flex aspect-[4/3] w-full items-center justify-center overflow-hidden border-b p-4"
+                  style={{ borderColor: "var(--color-hairline)", backgroundColor: "var(--color-canvas-soft)" }}
                 >
-                  Read full post on LinkedIn
-                  <span className="transition-transform group-hover:translate-x-1" aria-hidden="true">
-                    ↗
+                  {/* eslint-disable-next-line @next/next/no-img-element -- the real photo/diagram attached to the post itself, downloaded once as a static asset */}
+                  <img
+                    src={post.image}
+                    alt={`${post.topic} — image attached to the LinkedIn post`}
+                    className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.03]"
+                  />
+                </div>
+
+                <div className="flex flex-1 flex-col gap-6 p-6">
+                  <div>
+                    <p
+                      className="text-caption-uppercase mb-2"
+                      style={{ color: "var(--color-muted)" }}
+                    >
+                      {post.topic}
+                    </p>
+                    <p
+                      className="text-[14px] leading-relaxed"
+                      style={{ color: "var(--color-body)" }}
+                    >
+                      {post.excerpt}
+                    </p>
+                  </div>
+                  <span
+                    className="inline-flex items-center gap-1.5 text-[13px] font-medium"
+                    style={{ color: "var(--color-ink)" }}
+                  >
+                    Read full post on LinkedIn
+                    <span className="transition-transform group-hover:translate-x-1" aria-hidden="true">
+                      ↗
+                    </span>
                   </span>
-                </span>
-              </div>
-            </a>
+                </div>
+              </a>
+            </Reveal>
           ))}
         </div>
       ) : (

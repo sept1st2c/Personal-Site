@@ -5,6 +5,7 @@ import Link from "next/link";
 import { LuMenu, LuX } from "react-icons/lu";
 import { nav } from "@/lib/data";
 import MobileNav from "./MobileNav";
+import ResumeButton from "./ResumeButton";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -58,7 +59,7 @@ export default function Nav() {
             <a
               key={item.href}
               href={item.href}
-              className="text-[15px] font-medium"
+              className="link-underline text-[15px] font-medium"
               style={{ color: "var(--color-body)" }}
             >
               {item.label}
@@ -67,16 +68,15 @@ export default function Nav() {
         </nav>
 
         <div className="flex items-center gap-3">
-          <a
-            href="/resume.pdf"
-            className="inline-flex h-10 items-center rounded-full px-5 text-[15px] font-medium"
+          <ResumeButton
+            className="hover-lift inline-flex h-10 items-center rounded-full px-5 text-[15px] font-medium"
             style={{
               backgroundColor: "var(--color-primary)",
               color: "var(--color-on-primary)",
             }}
           >
             Résumé
-          </a>
+          </ResumeButton>
 
           {/* Mobile-only hamburger toggle — the `nav` list above vanishes
               entirely below `sm` with nothing replacing it; this plus
@@ -87,7 +87,7 @@ export default function Nav() {
             aria-expanded={open}
             aria-controls="mobile-nav-panel"
             aria-label={open ? "Close navigation menu" : "Open navigation menu"}
-            className="flex h-10 w-10 items-center justify-center rounded-full border transition-colors hover:bg-[var(--color-surface-strong)] sm:hidden"
+            className="hover-lift flex h-10 w-10 items-center justify-center rounded-full border transition-colors hover:bg-[var(--color-surface-strong)] sm:hidden"
             style={{ borderColor: "var(--color-hairline-strong)", color: "var(--color-ink)" }}
           >
             {open ? (

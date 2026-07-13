@@ -41,7 +41,7 @@ export default function AchievementsMarquee() {
               src={photo.src}
               alt={photo.caption}
               loading="lazy"
-              className="h-full w-full object-cover"
+              className="h-full w-full object-cover transition-transform duration-300 group-hover/item:scale-110"
             />
             <div
               className="pointer-events-none absolute inset-0 flex items-end p-2.5 opacity-0 transition-opacity duration-200 group-hover/item:opacity-100 group-focus-visible/item:opacity-100"

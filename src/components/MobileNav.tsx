@@ -59,16 +59,19 @@ export default function MobileNav({
           className="absolute inset-x-0 top-full z-50 border-b sm:hidden"
         >
           <nav className="mx-auto flex max-w-[1200px] flex-col gap-1 px-6 py-4">
-            {nav.map((item) => (
-              <a
+            {nav.map((item, i) => (
+              <motion.a
                 key={item.href}
                 href={item.href}
                 onClick={onClose}
+                initial={reduceMotion ? false : { opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.25, delay: reduceMotion ? 0 : 0.05 + i * 0.04, ease: [0.16, 1, 0.3, 1] }}
                 className="rounded-xl px-3 py-3 text-[15px] font-medium transition-colors hover:bg-[var(--color-surface-strong)]"
                 style={{ color: "var(--color-body)" }}
               >
                 {item.label}
-              </a>
+              </motion.a>
             ))}
           </nav>
         </motion.div>

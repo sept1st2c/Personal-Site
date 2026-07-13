@@ -160,7 +160,7 @@ export default function ProjectShowcase() {
           <button
             type="button"
             onClick={() => setShowAll((v) => !v)}
-            className="relative inline-flex h-11 items-center gap-2 rounded-full border px-6 text-[14px] font-medium transition-colors hover:bg-[var(--color-surface-strong)]"
+            className="hover-lift relative inline-flex h-11 items-center gap-2 rounded-full border px-6 text-[14px] font-medium transition-colors hover:bg-[var(--color-surface-strong)]"
             style={{ borderColor: "var(--color-hairline-strong)", color: "var(--color-ink)" }}
           >
             {showAll ? (
