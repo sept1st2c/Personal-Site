@@ -2,6 +2,7 @@ import { achievements, person } from "@/lib/data";
 import Section from "./Section";
 import AchievementsMarquee from "./AchievementsMarquee";
 import Reveal from "./Reveal";
+import { PopGroup, PopItem } from "./PopGroup";
 
 export default function Achievements() {
   return (
@@ -32,17 +33,18 @@ export default function Achievements() {
                       >
                         {group.category}
                       </h3>
-                      <ul className="mt-2 space-y-1.5">
+                      <PopGroup as="ul" className="mt-2 space-y-1.5" stagger={0.05}>
                         {group.items.map((item) => (
-                          <li
+                          <PopItem
                             key={item}
+                            as="li"
                             className="text-caption"
                             style={{ color: "var(--color-body)" }}
                           >
                             {item}
-                          </li>
+                          </PopItem>
                         ))}
-                      </ul>
+                      </PopGroup>
                     </div>
                   </div>
                 </Reveal>
@@ -58,12 +60,13 @@ export default function Achievements() {
                   >
                     {group.category}
                   </h3>
-                  <ul className="mt-3 space-y-2">
+                  <PopGroup as="ul" className="mt-3 space-y-2" stagger={0.05}>
                     {group.items.map((item) => {
                       const isLeetcode = group.category === "LeetCode";
                       return (
-                        <li
+                        <PopItem
                           key={item}
+                          as="li"
                           className="text-caption"
                           style={{ color: "var(--color-body)" }}
                         >
@@ -80,10 +83,10 @@ export default function Achievements() {
                           ) : (
                             item
                           )}
-                        </li>
+                        </PopItem>
                       );
                     })}
-                  </ul>
+                  </PopGroup>
                 </div>
               </Reveal>
             );

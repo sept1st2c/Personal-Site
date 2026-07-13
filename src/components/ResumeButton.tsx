@@ -15,15 +15,33 @@ const RESUME_PATH = "/resume.pdf";
  * download even though no `download` attribute was set). This keeps
  * visitors on the site and gives "view" and "download" as two distinct,
  * clearly labeled actions instead of one ambiguous link. Modal chrome
- * (fixed backdrop, motion.div panel, Escape-to-close, focus-on-open,
- * scroll lock) matches ProjectDetailPanel.tsx's established pattern.
+ * (fixed backdrop, motion.div panel, focus-on-open, scroll lock) matches
+ * ProjectDetailPanel.tsx's established pattern.
+ *
+ * Two things made the first version feel "stuck, can't go back": (1) the
+ * close button was a low-contrast surface-strong circle easy to miss next
+ * to the bolder Download pill right beside it, and (2) once a visitor
+ * clicks into the embedded PDF itself, focus moves into the iframe's own
+ * document — a separate browsing context — so the parent page's
+ * `window.addEventListener("keydown", ...)` Escape handler below silently
+ * stops receiving that keypress; this is a real cross-iframe limitation,
+ * not something fixable with more CSS. Escape still works right up until
+ * the iframe is clicked, and the backdrop is still click-to-close, but
+ * neither is discoverable enough on its own — so the fix that actually
+ * matters is making the header's close button impossible to miss (same
+ * bold ink-filled treatment as the primary Download action, not a quiet
+ * secondary one) and giving mobile a full-bleed layout with more breathing
+ * room around it, rather than relying on Escape/backdrop at all.
  *
  * The embedded `<iframe>` covers desktop/most mobile browsers fine, but
  * PDF-in-iframe support on mobile Safari has historically been
  * inconsistent — "Open in new tab" stays visible in the header (not
  * hidden behind any condition) as the reliable fallback to the device's
  * own native full-screen PDF viewer if the inline preview ever looks
- * broken.
+ * broken. Note: the PDF viewport's own internal scroll/zoom chrome is
+ * native browser UI rendered inside that separate iframe document — it
+ * isn't reachable by this site's CSS (including the sitewide thin
+ * scrollbar styling in globals.css), so it can't be restyled from here.
  */
 export default function ResumeButton({
   className,
@@ -74,7 +92,7 @@ export default function ResumeButton({
       <AnimatePresence>
         {open && (
           <motion.div
-            className="fixed inset-0 z-[10000] flex items-center justify-center p-3 sm:p-6"
+            className="fixed inset-0 z-[10000] flex items-center justify-center sm:p-6"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -82,6 +100,11 @@ export default function ResumeButton({
             onClick={() => setOpen(false)}
             style={{ backgroundColor: "color-mix(in srgb, var(--color-canvas-deep) 55%, transparent)" }}
           >
+            {/* Full-bleed on mobile (no rounded corners/margin eating into an
+                already-small screen) instead of the same floating-card
+                treatment desktop uses — a phone-sized "88vh floating panel
+                with p-3 margins" left very little breathing room around a
+                cramped 3-icon header row. sm+ restores the floating card. */}
             <motion.div
               role="dialog"
               aria-modal="true"
@@ -91,9 +114,17 @@ export default function ResumeButton({
               exit={reduceMotion ? { opacity: 0 } : { opacity: 0, y: 12, scale: 0.98 }}
               transition={panelTransition}
               onClick={(e) => e.stopPropagation()}
-              className="relative flex w-full max-w-[860px] flex-col overflow-hidden rounded-3xl border"
+              // Height as responsive Tailwind classes, not a blanket inline
+              // `style={{ height: ... }}` — an inline style always wins over
+              // ANY class at every breakpoint (Tailwind's `sm:h-[88vh]`
+              // included), so a single unconditional inline height here
+              // silently forced the mobile 100dvh height on desktop too,
+              // overflowing the panel ~45px past the viewport and pushing
+              // its header (with the close button) off-screen above frame —
+              // which is exactly what made the modal read as "broken, can't
+              // get back": the one control that mattered was invisible.
+              className="relative flex h-[100dvh] w-full flex-col overflow-hidden border-0 sm:h-[88vh] sm:max-w-[860px] sm:rounded-3xl sm:border"
               style={{
-                height: "88vh",
                 borderColor: "var(--color-hairline)",
                 backgroundColor: "var(--color-surface-card)",
               }}
@@ -111,7 +142,7 @@ export default function ResumeButton({
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label="Open résumé in a new tab"
-                    className="hover-lift inline-flex h-9 items-center gap-1.5 rounded-full border px-3 text-[13px] font-medium"
+                    className="hover-lift inline-flex h-10 items-center gap-1.5 rounded-full border px-3 text-[13px] font-medium"
                     style={{ borderColor: "var(--color-hairline-strong)", color: "var(--color-ink)" }}
                   >
                     <LuExternalLink size={14} aria-hidden="true" />
@@ -121,25 +152,31 @@ export default function ResumeButton({
                     href={RESUME_PATH}
                     download
                     aria-label="Download résumé"
-                    className="hover-lift inline-flex h-9 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium sm:px-4"
+                    className="hover-lift inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-[13px] font-medium sm:px-4"
                     style={{ backgroundColor: "var(--color-primary)", color: "var(--color-on-primary)" }}
                   >
                     <LuDownload size={14} aria-hidden="true" />
                     <span className="hidden sm:inline">Download</span>
                   </a>
+                  {/* Same bold ink-filled treatment as Download, not a quiet
+                      surface-strong circle — this is the one control that
+                      always has to work (Escape stops reaching this page
+                      once focus is inside the PDF iframe; see the note
+                      above), so it can't read as a secondary, skippable
+                      action. */}
                   <button
                     ref={closeButtonRef}
                     type="button"
                     onClick={() => setOpen(false)}
                     aria-label="Close résumé preview"
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2"
+                    className="hover-lift flex h-10 w-10 shrink-0 items-center justify-center rounded-full focus-visible:outline focus-visible:outline-2"
                     style={{
-                      backgroundColor: "var(--color-surface-strong)",
-                      color: "var(--color-ink)",
+                      backgroundColor: "var(--color-ink)",
+                      color: "var(--color-on-primary)",
                       outlineColor: "var(--color-ink)",
                     }}
                   >
-                    <IoClose size={16} />
+                    <IoClose size={20} />
                   </button>
                 </div>
               </div>

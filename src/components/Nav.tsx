@@ -6,6 +6,7 @@ import { LuMenu, LuX } from "react-icons/lu";
 import { nav } from "@/lib/data";
 import MobileNav from "./MobileNav";
 import ResumeButton from "./ResumeButton";
+import { PopGroup, PopItem } from "./PopGroup";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
@@ -54,18 +55,19 @@ export default function Nav() {
           Shubh Gupta
         </Link>
 
-        <nav className="hidden items-center gap-8 sm:flex">
+        <PopGroup as="nav" className="hidden items-center gap-8 sm:flex" stagger={0.06}>
           {nav.map((item) => (
-            <a
-              key={item.href}
-              href={item.href}
-              className="link-underline text-[15px] font-medium"
-              style={{ color: "var(--color-body)" }}
-            >
-              {item.label}
-            </a>
+            <PopItem key={item.href}>
+              <a
+                href={item.href}
+                className="link-underline text-[15px] font-medium"
+                style={{ color: "var(--color-body)" }}
+              >
+                {item.label}
+              </a>
+            </PopItem>
           ))}
-        </nav>
+        </PopGroup>
 
         <div className="flex items-center gap-3">
           <ResumeButton

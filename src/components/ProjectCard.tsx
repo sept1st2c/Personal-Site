@@ -5,6 +5,7 @@ import { SiGithub } from "react-icons/si";
 import type { Project } from "@/lib/data";
 import StackPill from "./StackPill";
 import ProjectGlyph from "./ProjectGlyph";
+import { PopGroup, PopItem } from "./PopGroup";
 
 /**
  * A single project tile in the grid showcase. Two layout variants:
@@ -146,19 +147,21 @@ export default function ProjectCard({
           {project.description}
         </p>
 
-        <div className="mt-4 flex flex-wrap gap-2">
+        <PopGroup className="mt-4 flex flex-wrap gap-2" stagger={0.04}>
           {project.stack.slice(0, maxPills).map((s) => (
-            <StackPill key={s} label={s} size="sm" />
+            <PopItem key={s}>
+              <StackPill label={s} size="sm" />
+            </PopItem>
           ))}
           {project.stack.length > maxPills && (
-            <span
+            <PopItem
               className="inline-flex items-center rounded-full px-2.5 py-1 text-[11px] font-medium"
               style={{ color: "var(--color-muted-soft)" }}
             >
               +{project.stack.length - maxPills} more
-            </span>
+            </PopItem>
           )}
-        </div>
+        </PopGroup>
 
         <div className={`flex flex-wrap items-center gap-4 ${featured ? "mt-6" : "mt-auto pt-6"}`}>
           <button

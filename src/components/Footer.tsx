@@ -1,5 +1,6 @@
 import { person } from "@/lib/data";
 import Reveal from "./Reveal";
+import { PopGroup, PopItem } from "./PopGroup";
 
 const links = [
   { label: "Email", href: `mailto:${person.email}` },
@@ -22,20 +23,21 @@ export default function Footer() {
             <p className="font-display text-[18px]" style={{ color: "var(--color-ink)" }}>
               {person.name}
             </p>
-            <nav className="flex flex-wrap gap-x-6 gap-y-2">
+            <PopGroup as="nav" className="flex flex-wrap gap-x-6 gap-y-2" stagger={0.06}>
               {links.map((link) => (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target={link.href.startsWith("mailto:") ? undefined : "_blank"}
-                  rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
-                  className="link-underline text-[15px]"
-                  style={{ color: "var(--color-body)" }}
-                >
-                  {link.label}
-                </a>
+                <PopItem key={link.label}>
+                  <a
+                    href={link.href}
+                    target={link.href.startsWith("mailto:") ? undefined : "_blank"}
+                    rel={link.href.startsWith("mailto:") ? undefined : "noopener noreferrer"}
+                    className="link-underline text-[15px]"
+                    style={{ color: "var(--color-body)" }}
+                  >
+                    {link.label}
+                  </a>
+                </PopItem>
               ))}
-            </nav>
+            </PopGroup>
           </div>
           <p className="mt-10 text-[13px]" style={{ color: "var(--color-muted-soft)" }}>
             © {new Date().getFullYear()} {person.name}. All rights reserved.
