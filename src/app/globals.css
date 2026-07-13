@@ -60,6 +60,22 @@
   --foreground: var(--color-ink);
 }
 
+/* Section.tsx/Hero.tsx apply --space-section as both top AND bottom
+   padding, so consecutive sections stack two full gaps (192px) between
+   their content. That reads fine on a 900px+ desktop viewport but eats a
+   full quarter of a 390x844 phone screen as dead space per boundary —
+   confirmed via a full mobile scroll-through screenshot audit, where the
+   Experience -> Projects transition in particular read as "did the page
+   stop?" before the next heading appeared. Scaling it down under the
+   same breakpoint everything else on the site treats as "mobile" keeps
+   the rhythm tighter without touching Section.tsx/Hero.tsx at all, since
+   both already read this token rather than a hardcoded number. */
+@media (max-width: 640px) {
+  :root {
+    --space-section: 60px;
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -296,9 +312,26 @@ body {
   transform: translateY(-2px);
   box-shadow: 0 14px 28px -14px color-mix(in srgb, var(--color-ink) 35%, transparent);
 }
+/* :hover never fires on a tap, so every one of these buttons/cards got
+   zero visual feedback on touch devices until whatever the tap actually
+   did (navigate, open a modal) finished — on a site whose primary
+   audience is recruiters skimming on their phone, that's most visitors
+   getting the least responsive-feeling version of every CTA on the
+   page. :active fires reliably on touch tap-down across mobile browsers,
+   so this gives phone taps their own quick press-down feedback instead
+   of silently reusing (or skipping) the desktop hover treatment.
+   (This used to just reset `transform: translateY(0)` here, cancelling
+   the hover lift back to flat on click/tap — the bug that actually
+   mattered while adding the scale-down below: a duplicate copy of that
+   same rule survived further down the file and, being declared later at
+   equal specificity, silently overrode this one's `scale(0.97)` back to
+   nothing every time. Confirmed via the compiled CSS output, which
+   showed both `.hover-lift:active` blocks. Consolidated into this one
+   rule instead of two.) */
 .hover-lift:active {
-  transform: translateY(0);
-  transition-duration: 0.1s;
+  transform: translateY(0) scale(0.97);
+  box-shadow: 0 6px 14px -10px color-mix(in srgb, var(--color-ink) 35%, transparent);
+  transition-duration: 0.12s;
 }
 
 /* Sitewide hover language for plain inline text links (nav links, footer

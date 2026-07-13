@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import { achievementPhotos } from "@/lib/data/achievementPhotos";
 
 /**
@@ -9,12 +10,20 @@ import { achievementPhotos } from "@/lib/data/achievementPhotos";
  * Hovering (or focusing, for keyboard users) a photo pauses the scroll
  * and reveals its real caption as an overlay.
  *
+ * `:hover`/`:focus-within` alone leave touch devices with no way to ever
+ * pause the strip or reach a caption — there's no hover state to tap
+ * into, and `tabIndex` only helps a keyboard user tabbing through, not a
+ * finger. `activeKey` tracks a tapped photo explicitly so touch visitors
+ * get the same pause + reveal, tapping again (or tapping elsewhere)
+ * to resume.
+ *
  * The list is duplicated once so the CSS animation can loop seamlessly
  * (translateX(0) -> translateX(-50%), then jump back unnoticed since the
  * second half is an identical copy of the first).
  */
 export default function AchievementsMarquee() {
   const photos = achievementPhotos;
+  const [activeKey, setActiveKey] = useState<string | null>(null);
 
   return (
     <div
@@ -27,35 +36,44 @@ export default function AchievementsMarquee() {
       // this outermost boundary is what actually lets it escape.
       className="above-grain marquee-mask group relative mt-10 -mx-6 overflow-hidden px-6 sm:-mx-0 sm:px-0"
       aria-label="Photos from talks, hackathons, and community events"
+      onMouseLeave={() => setActiveKey(null)}
     >
-      <div className="marquee-track flex w-max gap-3 group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]">
-        {[...photos, ...photos].map((photo, i) => (
-          <div
-            key={`${photo.src}-${i}`}
-            tabIndex={0}
-            className="above-grain group/item relative h-28 w-40 shrink-0 overflow-hidden rounded-xl border focus-visible:outline focus-visible:outline-2"
-            style={{ borderColor: "var(--color-hairline)", outlineColor: "var(--color-ink)" }}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element -- pre-compressed local thumbnails, no next/image benefit for a decorative marquee */}
-            <img
-              src={photo.src}
-              alt={photo.caption}
-              loading="lazy"
-              className="h-full w-full object-cover transition-transform duration-300 group-hover/item:scale-110"
-            />
+      <div
+        className="marquee-track flex w-max gap-3 group-hover:[animation-play-state:paused] group-focus-within:[animation-play-state:paused]"
+        style={{ animationPlayState: activeKey ? "paused" : undefined }}
+      >
+        {[...photos, ...photos].map((photo, i) => {
+          const key = `${photo.src}-${i}`;
+          const isActive = activeKey === key;
+          return (
             <div
-              className="pointer-events-none absolute inset-0 flex items-end p-2.5 opacity-0 transition-opacity duration-200 group-hover/item:opacity-100 group-focus-visible/item:opacity-100"
-              style={{
-                background:
-                  "linear-gradient(to top, color-mix(in srgb, var(--color-ink) 82%, transparent), transparent 65%)",
-              }}
+              key={key}
+              tabIndex={0}
+              onClick={() => setActiveKey((k) => (k === key ? null : key))}
+              className="above-grain group/item relative h-28 w-40 shrink-0 overflow-hidden rounded-xl border focus-visible:outline focus-visible:outline-2"
+              style={{ borderColor: "var(--color-hairline)", outlineColor: "var(--color-ink)" }}
             >
-              <p className="text-[12px] font-medium leading-snug" style={{ color: "var(--color-on-primary)" }}>
-                {photo.caption}
-              </p>
+              {/* eslint-disable-next-line @next/next/no-img-element -- pre-compressed local thumbnails, no next/image benefit for a decorative marquee */}
+              <img
+                src={photo.src}
+                alt={photo.caption}
+                loading="lazy"
+                className={`h-full w-full object-cover transition-transform duration-300 group-hover/item:scale-110 ${isActive ? "scale-110" : ""}`}
+              />
+              <div
+                className={`pointer-events-none absolute inset-0 flex items-end p-2.5 transition-opacity duration-200 group-hover/item:opacity-100 group-focus-visible/item:opacity-100 ${isActive ? "opacity-100" : "opacity-0"}`}
+                style={{
+                  background:
+                    "linear-gradient(to top, color-mix(in srgb, var(--color-ink) 82%, transparent), transparent 65%)",
+                }}
+              >
+                <p className="text-[12px] font-medium leading-snug" style={{ color: "var(--color-on-primary)" }}>
+                  {photo.caption}
+                </p>
+              </div>
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
     </div>
   );

@@ -50,6 +50,13 @@ import { EASE_SMOOTH } from "@/lib/motion";
  * that class sets `position: relative; z-index: 2; isolation: isolate`,
  * which is enough on its own to form a new stacking context above the
  * fixed `.grain-layer`.
+ *
+ * `whileTap` on the root and the image button gives touch devices their
+ * own press-down feedback — `whileHover`'s lift never fires on a tap, so
+ * without this, tapping a card (most visitors' actual path to it, since
+ * this is a phone-first audience) produced no visual response at all
+ * until the modal finished opening. Framer-motion-only for the same
+ * reason as `whileHover` above: one engine driving `transform` here.
  */
 export default function ProjectCard({
   project,
@@ -69,6 +76,7 @@ export default function ProjectCard({
     <motion.article
       layout
       whileHover={{ y: -4 }}
+      whileTap={{ scale: 0.98 }}
       transition={{
         // Scoped per-property: the layout FLIP animation (position/size
         // change between featured and stacked) keeps its slower, eased
@@ -98,6 +106,7 @@ export default function ProjectCard({
     >
       <motion.button
         layout
+        whileTap={{ scale: 0.98 }}
         type="button"
         onClick={onExpand}
         aria-label={`Expand ${project.name} case study`}

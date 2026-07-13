@@ -2,15 +2,18 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { LuMenu, LuX } from "react-icons/lu";
 import { nav } from "@/lib/data";
 import MobileNav from "./MobileNav";
 import ResumeButton from "./ResumeButton";
 import { PopGroup, PopItem } from "./PopGroup";
+import { EASE_SMOOTH } from "@/lib/motion";
 
 export default function Nav() {
   const [open, setOpen] = useState(false);
   const rootRef = useRef<HTMLElement>(null);
+  const reduceMotion = !!useReducedMotion();
 
   // Only listen for Escape / outside clicks while the mobile drawer is
   // actually open — same attach-while-relevant pattern as the modal in
@@ -89,14 +92,34 @@ export default function Nav() {
             aria-expanded={open}
             aria-controls="mobile-nav-panel"
             aria-label={open ? "Close navigation menu" : "Open navigation menu"}
-            className="hover-lift flex h-10 w-10 items-center justify-center rounded-full border transition-colors hover:bg-[var(--color-surface-strong)] sm:hidden"
+            className="hover-lift relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border transition-colors hover:bg-[var(--color-surface-strong)] sm:hidden"
             style={{ borderColor: "var(--color-hairline-strong)", color: "var(--color-ink)" }}
           >
-            {open ? (
-              <LuX size={20} aria-hidden="true" />
-            ) : (
-              <LuMenu size={20} aria-hidden="true" />
-            )}
+            <AnimatePresence mode="wait" initial={false}>
+              {open ? (
+                <motion.span
+                  key="close"
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={reduceMotion ? false : { opacity: 0, rotate: -90 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, rotate: 90 }}
+                  transition={{ duration: 0.25, ease: EASE_SMOOTH }}
+                >
+                  <LuX size={20} aria-hidden="true" />
+                </motion.span>
+              ) : (
+                <motion.span
+                  key="menu"
+                  className="absolute inset-0 flex items-center justify-center"
+                  initial={reduceMotion ? false : { opacity: 0, rotate: 90 }}
+                  animate={{ opacity: 1, rotate: 0 }}
+                  exit={reduceMotion ? { opacity: 0 } : { opacity: 0, rotate: -90 }}
+                  transition={{ duration: 0.25, ease: EASE_SMOOTH }}
+                >
+                  <LuMenu size={20} aria-hidden="true" />
+                </motion.span>
+              )}
+            </AnimatePresence>
           </button>
         </div>
       </div>
