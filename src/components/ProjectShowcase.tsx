@@ -81,11 +81,25 @@ export default function ProjectShowcase() {
               <motion.div
                 key={project.slug}
                 layout
-                initial={reduceMotion || i < INITIAL_COUNT ? false : { opacity: 0, y: 14 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+                // Previously `initial` was `false` for i < INITIAL_COUNT (the
+                // cards visible by default, i.e. what almost every visitor
+                // actually sees) and the rest only animated once, on mount —
+                // so the default 3-card view never animated at all, and cards
+                // revealed via "Show more" wouldn't replay on scroll either.
+                // whileInView (matching the Reveal component's pattern used
+                // everywhere else on the site) fixes both: every card
+                // animates in the first time it actually enters the
+                // viewport, whether that's on initial scroll or right after
+                // "Show more" mounts new ones already in view.
+                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-60px" }}
+                transition={{
+                  layout: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+                  default: { duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: reduceMotion ? 0 : i * 0.08 },
+                }}
                 // .above-grain here, not just on ProjectCard's inner root: the
-                // `animate={{ y: 0 }}` above leaves a persistent non-"none"
+                // `whileInView={{ y: 0 }}` above leaves a persistent non-"none"
                 // `transform` on this wrapper, which makes IT a stacking
                 // context root — silently trapping ProjectCard's own
                 // .above-grain inside a context that never reaches the
