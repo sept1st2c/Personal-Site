@@ -53,17 +53,28 @@ export default function Hero() {
           </div>
         </div>
 
-        <div className="min-w-0 flex-1">
+        {/* flex flex-col + explicit order-* below: at <640px this column was
+            measured (via Playwright getBoundingClientRect at 390px width)
+            to push the social icon row to roughly y=898px — past a
+            standard 844px-tall phone viewport's fold — because the photo,
+            name, role line, all 15 wrapped heroTags badges, and the
+            (also-wrapping-at-this-width) 3-button CTA row all sit above it
+            first. Not a clipping/collapse bug: every ancestor computed
+            `overflow: visible` and the row itself had a normal 342x40 rect
+            — it was simply buried under too much content to reach on
+            first paint. order-* reprioritizes it right after the role
+            line on narrow screens only (default, unprefixed classes);
+            `sm:` restores the original tags -> CTAs -> socials order once
+            there's enough width that wrapping — and the height it adds —
+            is no longer the problem. */}
+        <div className="flex min-w-0 flex-1 flex-col">
           {/* A plain "Portfolio" label read as a dry section tag; a
               conversational opener suits the hero better. Bumped past
               caption size and off the tracked-uppercase treatment (which
               would've made "Hey, I'm" read like a stiff eyebrow label, not
-              a greeting), with "Hey" carrying the ink color as the one bit
-              of emphasis in the line. */}
-          <p className="mb-4 text-[19px]" style={{ color: "var(--color-body)" }}>
-            <span style={{ color: "var(--color-ink)", fontWeight: 600, marginRight: "0.35em" }}>
-              Hey,
-            </span>
+              a greeting). */}
+          <p className="order-1 mb-4 text-[19px]" style={{ color: "var(--color-body)" }}>
+            <span style={{ marginRight: "0.35em" }}>Hey,</span>
             I&rsquo;m
           </p>
 
@@ -73,7 +84,7 @@ export default function Hero() {
               gradient — without it, the soft-light grain blend directly on
               the dark text pixels reads as a faint, washed-out tint there. */}
           <h1
-            className="above-grain font-display tracking-display-mega text-[36px] leading-[1.05] sm:text-[52px] lg:text-[60px]"
+            className="above-grain order-2 font-display tracking-display-mega text-[36px] leading-[1.05] sm:text-[52px] lg:text-[60px]"
             style={{ color: "var(--color-ink)" }}
           >
             {person.name}
@@ -82,13 +93,13 @@ export default function Hero() {
           {/* Role subhead ~ title-sm: a real step down from the hero, and a
               step up from body copy — was a plain body paragraph before. */}
           <p
-            className="text-title-sm mt-6 max-w-[540px]"
+            className="text-title-sm order-3 mt-6 max-w-[540px]"
             style={{ color: "var(--color-body)" }}
           >
             {person.role}
           </p>
 
-          <div className="mt-8 flex flex-wrap gap-2">
+          <div className="order-5 mt-8 flex flex-wrap gap-2 sm:order-4">
             {heroTags.map((tag) => (
               <TechBadge key={tag} label={tag} />
             ))}
@@ -97,7 +108,7 @@ export default function Hero() {
           {/* Download Résumé is the emphasized/primary action here — the
               site owner flagged the outline treatment as getting too little
               attention. "View Work" steps back to the outline slot. */}
-          <div className="mt-10 flex flex-wrap items-center gap-4">
+          <div className="order-6 mt-10 flex flex-wrap items-center gap-4 sm:order-5">
             <a
               href="/resume.pdf"
               className="inline-flex h-11 items-center gap-2 rounded-full px-6 text-[15px] font-semibold"
@@ -131,7 +142,7 @@ export default function Hero() {
             </a>
           </div>
 
-          <div className="mt-6">
+          <div className="order-4 mt-6 sm:order-6">
             <SocialLinks />
           </div>
 
@@ -140,7 +151,7 @@ export default function Hero() {
               treatment as before — school name carries the emphasis, the
               degree/CGPA detail steps back to a lighter weight and muted
               color so it reads as supporting detail. */}
-          <div className="mt-6 flex items-center gap-2.5">
+          <div className="order-7 mt-6 flex items-center gap-2.5">
             <LuGraduationCap
               size={20}
               aria-hidden="true"

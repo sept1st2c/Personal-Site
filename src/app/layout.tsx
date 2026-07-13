@@ -22,9 +22,9 @@ const siteUrl =
   process.env.NEXT_PUBLIC_SITE_URL ??
   (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
 
-const title = `${person.name} — Fullstack and Agentic AI Developer`;
+const title = `${person.name} | Fullstack and Agentic AI Developer`;
 const description =
-  "Shubh Gupta — fullstack developer and agentic AI enthusiast. Full-stack products, AI agent systems, and everything in between.";
+  "Shubh Gupta, fullstack developer and agentic AI enthusiast, building full-stack products and AI agent systems.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),

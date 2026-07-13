@@ -22,12 +22,12 @@ export default function Home() {
       <Nav />
       <main className="flex-1">
         <Hero />
-        <About />
         <Experience />
         <Projects />
         <Achievements />
         <Activity />
         <LinkedInPosts />
+        <About />
       </main>
       <Footer />
     </>

@@ -66,7 +66,7 @@ export const projects: Project[] = [
     bullets: [
       "Link-in-bio / digital-identity platform with 16 content block types (links, images, PDFs, catalogs, Spotify/YouTube embeds, contact buttons).",
       "9 pre-built themes plus custom color options, with a per-block visual editor.",
-      "Real-time analytics — views, clicks, devices, countries.",
+      "Real-time analytics: views, clicks, devices, countries.",
       "Branded short URLs (tapi.link/@username); NFC cards act as the physical tap-to-share layer.",
     ],
     stack: ["Next.js", "Clerk", "S3"],
@@ -94,10 +94,10 @@ export const projects: Project[] = [
       "/projects/pictured-photos/1-landing.png",
       "/projects/pictured-photos/2-detail.png",
     ],
-    note: "Deployment sits behind Vercel access protection — the owner needs to disable it for the public demo to load directly.",
+    note: "Deployment sits behind Vercel access protection. The owner needs to disable it for the public demo to load directly.",
     bullets: [
       "Computer vision project differentiating and grouping visually similar photos.",
-      "Handcrafted feature vector (FFT, LBP, wavelet H/V ratio, color stats) feeding a HistGradientBoosting classifier — chosen over a CNN so the model can't just memorize device fingerprints across only 8 device pairings.",
+      "Handcrafted feature vector (FFT, LBP, wavelet H/V ratio, color stats) feeding a HistGradientBoosting classifier, chosen over a CNN so the model can't just memorize device fingerprints across only 8 device pairings.",
       "Full-stack demo: Flask API on Render wrapping predict.py, Next.js + Tailwind front end for live upload/batch testing.",
     ],
     stack: ["Python", "scikit-learn", "OpenCV", "Flask", "Docker", "Next.js"],

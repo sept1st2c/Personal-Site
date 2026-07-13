@@ -28,6 +28,22 @@ import ProjectGlyph from "./ProjectGlyph";
  * any) is the odd one out, instead of it snapping between two very
  * different box shapes.
  *
+ * The hover lift (`whileHover={{ y: -4 }}`) intentionally lives on the
+ * SAME root element as `layout`, driven entirely by framer-motion (not a
+ * CSS `hover:-translate-y-*` class). Both used to fight over the
+ * `transform` property: a CSS transition and framer-motion's per-frame
+ * layout-projection transform each think they own it, and if the cursor
+ * ends up sitting over this card while it's mid-reflow (e.g. right after
+ * clicking "Show more" — the mouse doesn't move, but the card slides
+ * underneath it), the CSS transition restarts every frame against
+ * framer-motion's continuously-updating value, producing a visible
+ * stutter/jump (reproduced and confirmed via rapid-fire screenshots
+ * during the Tapi featured<->stacked transition). Keep any future hover/
+ * tap affordance here as a framer-motion gesture prop, not a Tailwind
+ * `transition`/`hover:` class, so there is only ever one engine driving
+ * `transform` on this element. box-shadow is unaffected by this and can
+ * stay a plain CSS transition since framer-motion never touches it.
+ *
  * `.above-grain` is applied directly to this component's root element:
  * that class sets `position: relative; z-index: 2; isolation: isolate`,
  * which is enough on its own to form a new stacking context above the
@@ -50,8 +66,27 @@ export default function ProjectCard({
   return (
     <motion.article
       layout
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-      className={`above-grain group relative flex h-full flex-col overflow-hidden rounded-3xl border transition-[transform,box-shadow] duration-300 hover:-translate-y-1 hover:shadow-[0_20px_45px_-16px_rgba(12,10,9,0.22)] ${
+      whileHover={{ y: -4 }}
+      transition={{
+        // Scoped per-property: the layout FLIP animation (position/size
+        // change between featured and stacked) keeps its slower, eased
+        // duration, while the hover lift gets its own snappier default.
+        // Previously the hover lift was a *CSS* transition
+        // (`transition-[transform] hover:-translate-y-1`) living on this
+        // same element as framer-motion's `layout` transform — both
+        // engines fought for ownership of the `transform` property. If
+        // the cursor happened to end up over this card mid-reflow (e.g.
+        // right after clicking "Show more", the mouse doesn't move, but
+        // Tapi's card slides underneath it), the CSS transition would
+        // restart every animation frame against framer-motion's
+        // continuously-updating inline transform, producing the
+        // stutter/jump. Moving the hover lift into `whileHover` puts
+        // both animations under framer-motion's single authority, so
+        // they compose instead of racing.
+        layout: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
+        default: { duration: 0.2, ease: "easeOut" },
+      }}
+      className={`above-grain group relative flex h-full flex-col overflow-hidden rounded-3xl border transition-shadow duration-300 hover:shadow-[0_20px_45px_-16px_rgba(12,10,9,0.22)] ${
         featured ? "sm:flex-row" : ""
       }`}
       style={{

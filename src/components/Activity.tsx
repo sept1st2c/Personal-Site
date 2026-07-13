@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { motion, useReducedMotion } from "framer-motion";
 import { person } from "@/lib/data";
 import Section from "./Section";
 import type { ActivityResult, DayActivity } from "@/lib/activity";
@@ -151,6 +152,7 @@ function Heatmap({ days }: { days: DayActivity[] }) {
   const labels = useMemo(() => monthLabels(weeks), [weeks]);
   const [activeKey, setActiveKey] = useState<string | null>(null);
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const reduceMotion = !!useReducedMotion();
 
   const totalCommits = days.reduce((s, d) => s + d.commits, 0);
   const totalSubmissions = days.reduce((s, d) => s + d.submissions, 0);
@@ -174,7 +176,21 @@ function Heatmap({ days }: { days: DayActivity[] }) {
           individual .above-grain inside a context that sits below
           .grain-layer (same bug class documented in globals.css and
           AchievementsMarquee). */}
-      <div ref={scrollerRef} className="above-grain scroll-fade-left overflow-x-auto pb-2">
+      {/* pt-8 / -mt-8: `overflow-x-auto` with no explicit `overflow-y` still
+          clips vertically too — per the CSS overflow spec, a non-"visible"
+          value on one axis forces the other axis's *computed* value away
+          from "visible" (to "auto") as well, so this box clips flush with
+          its own top edge. The top-row cells' tooltip (bottom-full, so it
+          renders *above* the cell) only had the ~16px month-label row as
+          clearance, which isn't enough for the tooltip's own height —
+          it was getting clipped off entirely. Adding padding-top here
+          gives the clip boundary room to breathe; the equal negative
+          margin-top cancels it back out so the grid's visual position
+          (and the gap under the section title) doesn't move at all. */}
+      <div
+        ref={scrollerRef}
+        className="above-grain scroll-fade-left overflow-x-auto pb-2 pt-8 -mt-8"
+      >
         <div style={{ width: weeks.length * (CELL + GAP) }}>
           {/* Month labels */}
           <div className="mb-1 flex" style={{ gap: GAP }}>
@@ -192,7 +208,31 @@ function Heatmap({ days }: { days: DayActivity[] }) {
           {/* Grid: weeks as columns, days as rows */}
           <div className="flex" style={{ gap: GAP }}>
             {weeks.map((week, wi) => (
-              <div key={wi} className="flex flex-col shrink-0" style={{ gap: GAP }}>
+              // .above-grain here too, not just on the cell buttons: the
+              // whileInView animation below leaves this column with a
+              // persistent non-"none" `transform` (scale) once resolved,
+              // which makes IT a stacking-context root and would otherwise
+              // trap its buttons' own .above-grain beneath .grain-layer —
+              // same bug class as Section.tsx's title wrapper and
+              // ProjectShowcase's card wrapper.
+              <motion.div
+                key={wi}
+                className="above-grain flex flex-col shrink-0"
+                style={{ gap: GAP }}
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true, margin: "-20px" }}
+                transition={{
+                  duration: 0.25,
+                  ease: [0.16, 1, 0.3, 1],
+                  // Staggered left-to-right, but capped so a wide 12-month
+                  // grid (~53 columns) still finishes quickly rather than
+                  // trickling in for over a second — this is a dense data
+                  // grid, not a hero moment, and hovering a cell shouldn't
+                  // ever feel gated behind a slow reveal.
+                  delay: reduceMotion ? 0 : Math.min(wi * 0.012, 0.35),
+                }}
+              >
                 {week.map((day, di) => {
                   if (!day) {
                     return <div key={di} style={{ width: CELL, height: CELL }} />;
@@ -244,7 +284,7 @@ function Heatmap({ days }: { days: DayActivity[] }) {
                     </div>
                   );
                 })}
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>

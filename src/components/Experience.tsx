@@ -1,6 +1,12 @@
+"use client";
+
+import { motion, useReducedMotion } from "framer-motion";
 import { experience } from "@/lib/data";
 import Section from "./Section";
 import CompanyFavicon from "./CompanyFavicon";
+
+// Stagger increment between consecutive rows' scroll-reveal delay.
+const ROW_STAGGER_S = 0.07;
 
 // Two-letter monogram from a company name — e.g. "Vitalis Capital" -> "VC",
 // "Tago" -> "TA". No logo image assets exist for any employer, so a clean
@@ -14,20 +20,51 @@ function monogram(name: string) {
 }
 
 export default function Experience() {
+  const reduceMotion = !!useReducedMotion();
+
   return (
     <Section id="experience" label="Experience" title="Where I've worked">
         <div>
           {experience.map((item, i) => {
             const isLast = i === experience.length - 1;
             return (
-              <div key={item.company} className="relative flex gap-5 sm:gap-6">
+              // Each row cascades in as the section scrolls into view —
+              // whileInView (not animate) so it triggers on scroll rather
+              // than firing once for whatever happens to already be on
+              // screen at load, matching the pattern in Section.tsx and
+              // ProjectShowcase.tsx. Staggered per-row via `delay: i *
+              // ROW_STAGGER_S` so rows cascade rather than popping in at
+              // once. This is the row div itself (not an extra wrapper
+              // around it) so the marker/line flex column inside is
+              // untouched — a wrapping element here would risk offsetting
+              // the rail line, which spans from this row's marker down to
+              // the next row's marker via plain document flow.
+              <motion.div
+                key={item.company}
+                className="relative flex gap-5 sm:gap-6"
+                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{
+                  duration: 0.5,
+                  ease: [0.16, 1, 0.3, 1],
+                  delay: reduceMotion ? 0 : i * ROW_STAGGER_S,
+                }}
+              >
                 {/* rail + monogram marker */}
                 <div className="relative flex w-10 flex-none flex-col items-center">
                   <CompanyFavicon url={item.url} monogram={monogram(item.company)} logo={item.logo} />
                   {!isLast && (
                     <div
                       className="mt-2 w-px flex-1"
-                      style={{ backgroundColor: "var(--color-hairline)" }}
+                      // var(--color-hairline-strong) (#d6d3d1) is still an
+                      // opaque near-white gray — measured too faint against
+                      // the canvas/atmosphere-gradient background to read as
+                      // a connecting line (see Playwright screenshot
+                      // comparison). An ink-based rgba reads noticeably
+                      // darker/clearer at both 1440px and 390px without
+                      // going as heavy as a solid dark line.
+                      style={{ backgroundColor: "rgba(12, 10, 9, 0.28)" }}
                       aria-hidden="true"
                     />
                   )}
@@ -81,7 +118,7 @@ export default function Experience() {
                     ))}
                   </ul>
                 </a>
-              </div>
+              </motion.div>
             );
           })}
         </div>
