@@ -2,6 +2,7 @@
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { nav } from "@/lib/data";
+import { EASE_SMOOTH } from "@/lib/motion";
 
 /**
  * Mobile-only dropdown drawer for the nav links (Nav.tsx hides the desktop
@@ -31,9 +32,7 @@ export default function MobileNav({
   const prefersReducedMotion = useReducedMotion();
   const reduceMotion = !!prefersReducedMotion;
 
-  const transition = reduceMotion
-    ? { duration: 0.01 }
-    : { duration: 0.28, ease: [0.16, 1, 0.3, 1] as const };
+  const transition = reduceMotion ? { duration: 0.01 } : { duration: 0.4, ease: EASE_SMOOTH };
 
   return (
     <AnimatePresence>
@@ -66,7 +65,7 @@ export default function MobileNav({
                 onClick={onClose}
                 initial={reduceMotion ? false : { opacity: 0, x: -8 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.25, delay: reduceMotion ? 0 : 0.05 + i * 0.04, ease: [0.16, 1, 0.3, 1] }}
+                transition={{ duration: 0.4, delay: reduceMotion ? 0 : 0.08 + i * 0.06, ease: EASE_SMOOTH }}
                 className="rounded-xl px-3 py-3 text-[15px] font-medium transition-colors hover:bg-[var(--color-surface-strong)]"
                 style={{ color: "var(--color-body)" }}
               >

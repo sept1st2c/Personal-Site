@@ -7,7 +7,7 @@ import TechBadge from "./TechBadge";
 // the same way across the site, instead of a bespoke implementation here.
 export default function HeroTags({ tags }: { tags: string[] }) {
   return (
-    <PopGroup className="order-5 mt-8 flex flex-wrap gap-2 sm:order-4" stagger={0.025} delayChildren={0.5}>
+    <PopGroup className="order-5 mt-8 flex flex-wrap gap-2 sm:order-4" stagger={0.04} delayChildren={0.5}>
       {tags.map((tag) => (
         <PopItem key={tag} className="inline-flex transition-transform hover:scale-105">
           <TechBadge label={tag} />

@@ -4,9 +4,10 @@ import { motion, useReducedMotion } from "framer-motion";
 import { experience } from "@/lib/data";
 import Section from "./Section";
 import CompanyFavicon from "./CompanyFavicon";
+import { TEXT_TRANSITION, TEXT_Y } from "@/lib/motion";
 
 // Stagger increment between consecutive rows' scroll-reveal delay.
-const ROW_STAGGER_S = 0.07;
+const ROW_STAGGER_S = 0.1;
 
 // Two-letter monogram from a company name — e.g. "Vitalis Capital" -> "VC",
 // "Tago" -> "TA". No logo image assets exist for any employer, so a clean
@@ -42,12 +43,11 @@ export default function Experience() {
               <motion.div
                 key={item.company}
                 className="relative flex gap-5 sm:gap-6"
-                initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+                initial={reduceMotion ? false : { opacity: 0, y: TEXT_Y }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-80px" }}
                 transition={{
-                  duration: 0.5,
-                  ease: [0.16, 1, 0.3, 1],
+                  ...TEXT_TRANSITION,
                   delay: reduceMotion ? 0 : i * ROW_STAGGER_S,
                 }}
               >

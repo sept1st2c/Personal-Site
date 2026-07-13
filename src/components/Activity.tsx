@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import { person } from "@/lib/data";
 import Section from "./Section";
+import { EASE_SMOOTH } from "@/lib/motion";
 import type { ActivityResult, DayActivity } from "@/lib/activity";
 
 const MONTH_LABEL_FORMAT = new Intl.DateTimeFormat("en-US", {
@@ -219,18 +220,18 @@ function Heatmap({ days }: { days: DayActivity[] }) {
                 key={wi}
                 className="above-grain flex flex-col shrink-0"
                 style={{ gap: GAP }}
-                initial={reduceMotion ? false : { opacity: 0, scale: 0.85 }}
+                initial={reduceMotion ? false : { opacity: 0, scale: 0.92 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: "-20px" }}
                 transition={{
-                  duration: 0.25,
-                  ease: [0.16, 1, 0.3, 1],
+                  duration: 0.4,
+                  ease: EASE_SMOOTH,
                   // Staggered left-to-right, but capped so a wide 12-month
                   // grid (~53 columns) still finishes quickly rather than
                   // trickling in for over a second — this is a dense data
                   // grid, not a hero moment, and hovering a cell shouldn't
                   // ever feel gated behind a slow reveal.
-                  delay: reduceMotion ? 0 : Math.min(wi * 0.012, 0.35),
+                  delay: reduceMotion ? 0 : Math.min(wi * 0.012, 0.4),
                 }}
               >
                 {week.map((day, di) => {

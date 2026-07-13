@@ -2,8 +2,7 @@
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import type { CSSProperties, ReactNode } from "react";
-
-const EASE = [0.16, 1, 0.3, 1] as const;
+import { POP_TRANSITION, POP_SCALE_FROM } from "@/lib/motion";
 
 const TAGS = {
   span: motion.span,
@@ -14,17 +13,21 @@ const TAGS = {
 } as const;
 
 /**
- * The quick, energetic stagger-scale-in HeroTags/SocialLinks originally
- * used, generalized into a shared pair so the same "cool" pop-in reads
- * consistently on every small-item list sitewide (stack pills, achievement
- * list items, nav links) instead of being reinvented per component or
- * left as a single plain fade like the larger section-level Reveal.
- * PopGroup drives the stagger; each direct child goes in a PopItem.
+ * The stagger-scale-in HeroTags/SocialLinks originally used, generalized
+ * into a shared pair so the same pop-in reads consistently on every
+ * small-item list sitewide (stack pills, achievement list items, nav
+ * links) instead of being reinvented per component or left as a single
+ * plain fade like the larger section-level Reveal. PopGroup drives the
+ * stagger; each direct child goes in a PopItem. Timing/scale come from
+ * src/lib/motion.ts's POP_* constants — tuned to a gentle emergence
+ * (small scale delta, smoother easing) rather than the more dramatic
+ * "zoom pop" the first version used, which read as harsh once several
+ * items popped in back-to-back.
  */
 export function PopGroup({
   children,
   className,
-  stagger = 0.05,
+  stagger = 0.07,
   delayChildren = 0,
   as = "div",
 }: {
@@ -79,8 +82,8 @@ export function PopItem({
   const reduceMotion = !!useReducedMotion();
 
   const item: Variants = {
-    hidden: reduceMotion ? {} : { opacity: 0, y: 8, scale: 0.92 },
-    visible: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.35, ease: EASE } },
+    hidden: reduceMotion ? {} : { opacity: 0, y: 10, scale: POP_SCALE_FROM },
+    visible: { opacity: 1, y: 0, scale: 1, transition: POP_TRANSITION },
   };
 
   const Component = TAGS[as];

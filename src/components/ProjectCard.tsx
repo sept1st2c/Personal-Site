@@ -6,6 +6,7 @@ import type { Project } from "@/lib/data";
 import StackPill from "./StackPill";
 import ProjectGlyph from "./ProjectGlyph";
 import { PopGroup, PopItem } from "./PopGroup";
+import { EASE_SMOOTH } from "@/lib/motion";
 
 /**
  * A single project tile in the grid showcase. Two layout variants:
@@ -84,8 +85,8 @@ export default function ProjectCard({
         // stutter/jump. Moving the hover lift into `whileHover` puts
         // both animations under framer-motion's single authority, so
         // they compose instead of racing.
-        layout: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
-        default: { duration: 0.2, ease: "easeOut" },
+        layout: { duration: 0.5, ease: EASE_SMOOTH },
+        default: { duration: 0.25, ease: EASE_SMOOTH },
       }}
       className={`above-grain group relative flex h-full flex-col overflow-hidden rounded-3xl border transition-shadow duration-300 hover:shadow-[0_20px_45px_-16px_rgba(12,10,9,0.22)] ${
         featured ? "sm:flex-row" : ""

@@ -6,6 +6,7 @@ import { LuChevronDown, LuChevronUp } from "react-icons/lu";
 import { projects } from "@/lib/data";
 import ProjectCard from "./ProjectCard";
 import ProjectDetailPanel from "./ProjectDetailPanel";
+import { EASE_SMOOTH } from "@/lib/motion";
 
 const INITIAL_COUNT = 3;
 
@@ -91,12 +92,12 @@ export default function ProjectShowcase() {
                 // animates in the first time it actually enters the
                 // viewport, whether that's on initial scroll or right after
                 // "Show more" mounts new ones already in view.
-                initial={reduceMotion ? false : { opacity: 0, y: 14 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{
-                  layout: { duration: 0.45, ease: [0.16, 1, 0.3, 1] },
-                  default: { duration: 0.45, ease: [0.16, 1, 0.3, 1], delay: reduceMotion ? 0 : i * 0.08 },
+                  layout: { duration: 0.5, ease: EASE_SMOOTH },
+                  default: { duration: 0.6, ease: EASE_SMOOTH, delay: reduceMotion ? 0 : i * 0.1 },
                 }}
                 // .above-grain here, not just on ProjectCard's inner root: the
                 // `whileInView={{ y: 0 }}` above leaves a persistent non-"none"

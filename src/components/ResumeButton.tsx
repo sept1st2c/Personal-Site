@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { IoClose } from "react-icons/io5";
 import { LuDownload, LuExternalLink } from "react-icons/lu";
+import { EASE_SMOOTH } from "@/lib/motion";
 
 const RESUME_PATH = "/resume.pdf";
 
@@ -78,10 +79,8 @@ export default function ResumeButton({
     if (open) closeButtonRef.current?.focus();
   }, [open]);
 
-  const overlayTransition = reduceMotion ? { duration: 0.01 } : { duration: 0.25 };
-  const panelTransition = reduceMotion
-    ? { duration: 0.01 }
-    : { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const };
+  const overlayTransition = reduceMotion ? { duration: 0.01 } : { duration: 0.3 };
+  const panelTransition = reduceMotion ? { duration: 0.01 } : { duration: 0.5, ease: EASE_SMOOTH };
 
   return (
     <>

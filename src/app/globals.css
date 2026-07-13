@@ -260,12 +260,12 @@ body {
    hero CTAs, "Explore project", LinkedIn cards, etc.) — one shared lift
    + shadow treatment so every clickable surface reacts the same way
    instead of each component inventing its own hover feel. Same easing
-   curve framer-motion uses elsewhere in this codebase ([0.16, 1, 0.3, 1])
-   so CSS-driven and JS-driven motion read as one consistent language. */
+   curve as src/lib/motion.ts's EASE_SMOOTH ([0.25, 1, 0.5, 1]) so
+   CSS-driven and JS-driven motion read as one consistent language. */
 .hover-lift {
   transition:
-    transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-    box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .hover-lift:hover {
   transform: translateY(-2px);
@@ -295,24 +295,28 @@ body {
   bottom: -2px;
   height: 1px;
   background: currentColor;
-  transition: right 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: right 0.35s cubic-bezier(0.25, 1, 0.5, 1);
 }
 .link-underline:hover::after,
 .link-underline:focus-visible::after {
   right: 0;
 }
 
-/* Very subtle hairline fade-in, respecting reduced-motion preference. */
+/* Hero's entrance — previously only a 6px move over 0.5s, which read as
+   barely-there next to text elsewhere on the site (Reveal/Section use a
+   26px move over 0.7s for headings/paragraphs; see src/lib/motion.ts).
+   Matched to the same distance/duration/easing here for consistency,
+   respecting reduced-motion preference. */
 @media (prefers-reduced-motion: no-preference) {
   .fade-in {
-    animation: fade-in-up 0.5s ease-out both;
+    animation: fade-in-up 0.7s cubic-bezier(0.25, 1, 0.5, 1) both;
   }
 }
 
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(26px);
   }
   to {
     opacity: 1;

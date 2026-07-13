@@ -7,6 +7,7 @@ import { SiGithub } from "react-icons/si";
 import type { Project } from "@/lib/data";
 import StackPill from "./StackPill";
 import ProjectGlyph from "./ProjectGlyph";
+import { EASE_SMOOTH } from "@/lib/motion";
 
 /**
  * Full case-study modal, opened from a grid card in ProjectShowcase.
@@ -36,10 +37,8 @@ export default function ProjectDetailPanel({
     closeButtonRef.current?.focus();
   }, []);
 
-  const overlayTransition = reduceMotion ? { duration: 0.01 } : { duration: 0.25 };
-  const panelTransition = reduceMotion
-    ? { duration: 0.01 }
-    : { duration: 0.4, ease: [0.16, 1, 0.3, 1] as const };
+  const overlayTransition = reduceMotion ? { duration: 0.01 } : { duration: 0.3 };
+  const panelTransition = reduceMotion ? { duration: 0.01 } : { duration: 0.5, ease: EASE_SMOOTH };
 
   return (
     <motion.div

@@ -4,6 +4,7 @@ import { motion, useReducedMotion } from "framer-motion";
 import { FaLinkedin, FaXTwitter } from "react-icons/fa6";
 import { SiGithub, SiLeetcode } from "react-icons/si";
 import { person } from "@/lib/data";
+import { POP_TRANSITION, POP_SCALE_FROM, EASE_SMOOTH } from "@/lib/motion";
 
 const iconLinks = [
   { label: "LinkedIn", href: person.linkedin, Icon: FaLinkedin },
@@ -43,12 +44,11 @@ export default function SocialLinks() {
           target="_blank"
           rel="noopener noreferrer"
           aria-label={label}
-          initial={prefersReducedMotion ? false : { opacity: 0, y: 10, scale: 0.75 }}
+          initial={prefersReducedMotion ? false : { opacity: 0, y: 10, scale: POP_SCALE_FROM }}
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{
-            duration: 0.45,
-            delay: prefersReducedMotion ? 0 : 0.2 + i * 0.08,
-            ease: [0.16, 1, 0.3, 1],
+            ...POP_TRANSITION,
+            delay: prefersReducedMotion ? 0 : 0.3 + i * 0.1,
           }}
           whileHover={
             prefersReducedMotion
@@ -57,6 +57,7 @@ export default function SocialLinks() {
                   scale: 1.08,
                   y: -3,
                   boxShadow: "0 14px 28px -10px rgba(12,10,9,0.5)",
+                  transition: { duration: 0.25, ease: EASE_SMOOTH },
                 }
           }
           whileTap={prefersReducedMotion ? undefined : { scale: 0.96 }}

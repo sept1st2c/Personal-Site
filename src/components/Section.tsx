@@ -2,6 +2,7 @@
 
 import { ReactNode } from "react";
 import { motion, useReducedMotion } from "framer-motion";
+import { TEXT_TRANSITION, TEXT_Y } from "@/lib/motion";
 
 export default function Section({
   id,
@@ -44,10 +45,10 @@ export default function Section({
         // documented on Hero's .fade-in wrapper and elsewhere).
         <motion.div
           className="above-grain mb-10"
-          initial={reduceMotion ? false : { opacity: 0, y: 16 }}
+          initial={reduceMotion ? false : { opacity: 0, y: TEXT_Y }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          transition={TEXT_TRANSITION}
         >
           {label && (
             <p
