@@ -26,11 +26,8 @@ const iconLinks = [
  * used by Hero.tsx's photo/H1 and ProjectShowcase's motion.div cards: the
  * `animate={{ scale: 1, y: 0 }}` rest state still leaves a non-"none"
  * `transform` on each motion.a, which makes it a stacking-context root in
- * its own right. Hero's outer `.above-grain.fade-in` wrapper already sits
- * above the grain layer as a whole, so these would likely inherit that —
- * but matching the rest of the codebase's belt-and-suspenders convention
- * (rather than relying on that implicitly) keeps this correct even if
- * SocialLinks is ever reused somewhere without that elevated ancestor.
+ * its own right and needs its own escape from .grain-layer rather than
+ * relying on an ancestor to already be elevated.
  */
 export default function SocialLinks() {
   const prefersReducedMotion = useReducedMotion();
@@ -48,7 +45,7 @@ export default function SocialLinks() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           transition={{
             ...POP_TRANSITION,
-            delay: prefersReducedMotion ? 0 : 0.3 + i * 0.1,
+            delay: prefersReducedMotion ? 0 : 0.65 + i * 0.08,
           }}
           whileHover={
             prefersReducedMotion

@@ -88,7 +88,7 @@ export default function ProjectCard({
         layout: { duration: 0.5, ease: EASE_SMOOTH },
         default: { duration: 0.25, ease: EASE_SMOOTH },
       }}
-      className={`above-grain group relative flex h-full flex-col overflow-hidden rounded-3xl border transition-shadow duration-300 hover:shadow-[0_20px_45px_-16px_rgba(12,10,9,0.22)] ${
+      className={`above-grain group relative flex h-full flex-col overflow-hidden rounded-3xl border transition-[box-shadow,border-color] duration-300 hover:border-[var(--color-hairline-strong)] hover:shadow-[0_20px_45px_-16px_rgba(12,10,9,0.22)] ${
         featured ? "sm:flex-row" : ""
       }`}
       style={{
@@ -115,7 +115,7 @@ export default function ProjectCard({
             <img
               src={hero}
               alt={`${project.name} screenshot`}
-              className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 group-hover:scale-[1.04]"
+              className="absolute inset-0 h-full w-full object-cover object-top transition-transform duration-500 ease-out group-hover:scale-[1.07]"
             />
           )}
           {!hero && <ProjectGlyph className="absolute inset-0" />}

@@ -1,11 +1,17 @@
+"use client";
+
 import Image from "next/image";
+import { motion, useReducedMotion } from "framer-motion";
 import { LuFileText, LuGraduationCap } from "react-icons/lu";
 import { education, heroTags, person } from "@/lib/data";
 import HeroTags from "./HeroTags";
 import SocialLinks from "./SocialLinks";
 import ResumeButton from "./ResumeButton";
+import { EASE_SMOOTH } from "@/lib/motion";
 
 export default function Hero() {
+  const reduceMotion = !!useReducedMotion();
+
   return (
     <section
       id="top"
@@ -19,29 +25,28 @@ export default function Hero() {
           lg:flex-row-reverse — the photo is first in markup so it stacks
           on top on mobile/tablet, then flips to the right on lg+ without
           needing separate mobile/desktop markup. A small 96px avatar felt
-          like an afterthought here; this gives the photo real presence. */}
-      {/* .above-grain here (not just on the photo/H1 individually) matters:
-          .fade-in's entrance animation ends on `transform: translateY(0)` —
-          a non-"none" transform value, which per spec makes this div a
-          stacking-context root on its own regardless of z-index. That
-          silently trapped the photo's and H1's own .above-grain (z-index:2)
-          inside a LOCAL context that never gets compared against the
-          root-level .grain-layer at all, so grain still rendered on top of
-          the photo despite it. Elevating this outer boundary is what
-          actually lets everything inside escape grain. */}
-      <div className="above-grain fade-in flex flex-col gap-10 lg:flex-row-reverse lg:items-center lg:justify-between lg:gap-16">
+          like an afterthought here; this gives the photo real presence.
+          This is the first thing a visitor sees, so — unlike everywhere
+          else on the site, which reveals as a single block — every piece
+          here (photo, greeting, name, role, tags, CTAs, socials,
+          education) now animates in as its own choreographed step instead
+          of the whole column arriving as one flat block. */}
+      <div className="flex flex-col gap-10 lg:flex-row-reverse lg:items-center lg:justify-between lg:gap-16">
         {/* Smaller on phones on purpose: the photo doesn't need to dominate
             the fold there — the info below it (name, role, tags, CTAs) is
             what a cold-outreach recipient actually came to scan, so it gets
             priority over a large portrait on narrow viewports. */}
         <div className="mx-auto w-full max-w-[180px] shrink-0 sm:max-w-[260px] lg:mx-0 lg:w-[360px] lg:max-w-none">
-          <div
+          <motion.div
             className="above-grain overflow-hidden rounded-[28px] border shadow-[0_24px_60px_-24px_rgba(12,10,9,0.28)]"
             style={{
               borderColor: "var(--color-hairline-strong)",
               backgroundColor: "var(--color-canvas-soft)",
               aspectRatio: "4 / 5",
             }}
+            initial={reduceMotion ? false : { opacity: 0, scale: 0.94 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9, ease: EASE_SMOOTH, delay: reduceMotion ? 0 : 0.1 }}
           >
             <Image
               src="/shubh-gupta.jpg"
@@ -51,7 +56,7 @@ export default function Hero() {
               className="h-full w-full object-cover"
               priority
             />
-          </div>
+          </motion.div>
         </div>
 
         {/* flex flex-col + explicit order-* below: at <640px this column was
@@ -74,31 +79,55 @@ export default function Hero() {
               caption size and off the tracked-uppercase treatment (which
               would've made "Hey, I'm" read like a stiff eyebrow label, not
               a greeting). */}
-          <p className="order-1 mb-4 text-[19px]" style={{ color: "var(--color-body)" }}>
+          <motion.p
+            className="order-1 mb-4 text-[19px]"
+            style={{ color: "var(--color-body)" }}
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.55, ease: EASE_SMOOTH, delay: reduceMotion ? 0 : 0.05 }}
+          >
             <span style={{ marginRight: "0.35em" }}>Hey,</span>
             I&rsquo;m
-          </p>
+          </motion.p>
 
           {/* Hero H1 ~ display-mega: the largest, tightest-tracked type
-              moment on the page — visibly a size class above section heads.
+              moment on the page — visibly a size class above section heads,
+              and the single most prominent thing a visitor sees. Gets its
+              own signature "curtain" reveal (an overflow-hidden mask with
+              the text itself sliding up from below into view) rather than
+              the plain fade+slide every other line uses, since this is the
+              one piece of the page that should feel like a deliberate
+              moment, not just another list item settling into place.
               `.above-grain` keeps it crisp where it overlaps the atmosphere
               gradient — without it, the soft-light grain blend directly on
-              the dark text pixels reads as a faint, washed-out tint there. */}
-          <h1
-            className="above-grain order-2 font-display tracking-display-mega text-[36px] leading-[1.05] sm:text-[52px] lg:text-[60px]"
-            style={{ color: "var(--color-ink)" }}
-          >
-            {person.name}
-          </h1>
+              the dark text pixels reads as a faint, washed-out tint there.
+              overflow-hidden on the wrapper doesn't itself create a new
+              stacking context (no transform/opacity/filter of its own), so
+              .above-grain staying directly on the h1 is still correct — the
+              clipping box is just a mask, not an intervening context. */}
+          <div className="order-2 overflow-hidden">
+            <motion.h1
+              className="above-grain font-display tracking-display-mega text-[36px] leading-[1.05] sm:text-[52px] lg:text-[60px]"
+              style={{ color: "var(--color-ink)" }}
+              initial={reduceMotion ? false : { y: "110%", opacity: 0 }}
+              animate={{ y: "0%", opacity: 1 }}
+              transition={{ duration: 0.75, ease: EASE_SMOOTH, delay: reduceMotion ? 0 : 0.15 }}
+            >
+              {person.name}
+            </motion.h1>
+          </div>
 
           {/* Role subhead ~ title-sm: a real step down from the hero, and a
               step up from body copy — was a plain body paragraph before. */}
-          <p
+          <motion.p
             className="text-title-sm order-3 mt-6 max-w-[540px]"
             style={{ color: "var(--color-body)" }}
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE_SMOOTH, delay: reduceMotion ? 0 : 0.35 }}
           >
             {person.role}
-          </p>
+          </motion.p>
 
           <HeroTags tags={heroTags} />
 
@@ -108,7 +137,12 @@ export default function Hero() {
               preview (ResumeButton) rather than navigating away to the raw
               PDF, with "download" as its own explicit action inside that
               preview instead of being the only thing this button did. */}
-          <div className="order-6 mt-10 flex flex-wrap items-center gap-4 sm:order-5">
+          <motion.div
+            className="order-6 mt-10 flex flex-wrap items-center gap-4 sm:order-5"
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE_SMOOTH, delay: reduceMotion ? 0 : 0.55 }}
+          >
             <ResumeButton
               className="hover-lift inline-flex h-11 items-center gap-2 rounded-full px-6 text-[15px] font-semibold"
               style={{
@@ -139,7 +173,7 @@ export default function Hero() {
             >
               Experience
             </a>
-          </div>
+          </motion.div>
 
           <div className="order-4 mt-6 sm:order-6">
             <SocialLinks />
@@ -150,7 +184,12 @@ export default function Hero() {
               treatment as before — school name carries the emphasis, the
               degree/CGPA detail steps back to a lighter weight and muted
               color so it reads as supporting detail. */}
-          <div className="order-7 mt-6 flex items-center gap-2.5">
+          <motion.div
+            className="order-7 mt-6 flex items-center gap-2.5"
+            initial={reduceMotion ? false : { opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, ease: EASE_SMOOTH, delay: reduceMotion ? 0 : 0.75 }}
+          >
             <LuGraduationCap
               size={20}
               aria-hidden="true"
@@ -165,7 +204,7 @@ export default function Hero() {
                 — {education.degree} · {education.cgpa}
               </span>
             </p>
-          </div>
+          </motion.div>
         </div>
       </div>
     </section>

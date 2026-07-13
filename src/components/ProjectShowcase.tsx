@@ -78,6 +78,14 @@ export default function ProjectShowcase() {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-7">
           {visible.map((project, i) => {
             const featured = i === oddOneOutIndex;
+            // Alternating left/right entrance instead of every card sliding
+            // in on the same straight vertical path — left-column cards
+            // drift in from the left, right-column from the right, giving
+            // the grid some directional life instead of a uniform "row of
+            // cards fading up in place". Featured cards span both columns
+            // (sm:col-span-2), so a horizontal drift would look lopsided
+            // against their own width — those stay vertical-only.
+            const sideOffset = featured ? 0 : i % 2 === 0 ? -28 : 28;
             return (
               <motion.div
                 key={project.slug}
@@ -92,12 +100,12 @@ export default function ProjectShowcase() {
                 // animates in the first time it actually enters the
                 // viewport, whether that's on initial scroll or right after
                 // "Show more" mounts new ones already in view.
-                initial={reduceMotion ? false : { opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={reduceMotion ? false : { opacity: 0, y: 24, x: sideOffset, scale: 0.96 }}
+                whileInView={{ opacity: 1, y: 0, x: 0, scale: 1 }}
                 viewport={{ once: true, margin: "-60px" }}
                 transition={{
                   layout: { duration: 0.5, ease: EASE_SMOOTH },
-                  default: { duration: 0.6, ease: EASE_SMOOTH, delay: reduceMotion ? 0 : i * 0.1 },
+                  default: { duration: 0.65, ease: EASE_SMOOTH, delay: reduceMotion ? 0 : i * 0.1 },
                 }}
                 // .above-grain here, not just on ProjectCard's inner root: the
                 // `whileInView={{ y: 0 }}` above leaves a persistent non-"none"
