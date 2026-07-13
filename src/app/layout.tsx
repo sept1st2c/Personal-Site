@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { person } from "@/lib/data";
+import CustomCursor from "@/components/CustomCursor";
 
 // Self-hosted at build time via next/font — no runtime CDN request, and it
 // degrades to the system sans stack declared in the font's fallback if the
@@ -56,6 +57,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         <div className="atmosphere-layer" aria-hidden="true" />
         <div className="grain-layer" aria-hidden="true" />
+        <CustomCursor />
         {children}
       </body>
     </html>

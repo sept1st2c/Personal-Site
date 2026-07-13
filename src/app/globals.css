@@ -256,6 +256,31 @@ body {
   border-color: var(--color-hairline);
 }
 
+/* CustomCursor.tsx always renders its dot/ring markup (so server and
+   client output match — no JS media-query check gating what mounts) and
+   leaves the decision of whether to actually show it up to CSS alone:
+   hidden by default, shown only on a fine pointer with no
+   reduced-motion preference. The native cursor is hidden by the exact
+   same condition, so the two can never disagree (no custom cursor with
+   no native cursor, or vice versa). `*` in the second rule (not just the
+   root) because native form controls like <button> set their own
+   `cursor: pointer` directly, which would otherwise win over an
+   inherited `cursor: none` on <html>. */
+.cursor-layer {
+  display: none;
+}
+
+@media (pointer: fine) and (prefers-reduced-motion: no-preference) {
+  .cursor-layer {
+    display: contents;
+  }
+
+  :root,
+  :root * {
+    cursor: none !important;
+  }
+}
+
 /* Sitewide hover language for every solid pill/card CTA (nav Résumé,
    hero CTAs, "Explore project", LinkedIn cards, etc.) — one shared lift
    + shadow treatment so every clickable surface reacts the same way
