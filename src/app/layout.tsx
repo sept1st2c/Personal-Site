@@ -1,5 +1,7 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import "./globals.css";
 import { person } from "@/lib/data";
 import CustomCursor from "@/components/CustomCursor";
@@ -59,6 +61,16 @@ export default function RootLayout({
         <div className="grain-layer" aria-hidden="true" />
         <CustomCursor />
         {children}
+        {/* Renders nothing visible — a private Vercel dashboard-only view
+            of page views, referrers (e.g. a cold DM link vs. LinkedIn vs.
+            direct), country, and device type. No cookie banner needed:
+            Vercel's Web Analytics is cookieless and doesn't collect PII,
+            so this doesn't change anything a visitor sees or experiences.
+            Silently a no-op on any deploy other than Vercel (localhost,
+            other hosts) since the beacon endpoint it posts to won't
+            exist — safe to leave in unconditionally. */}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );
