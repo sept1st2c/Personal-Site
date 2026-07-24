@@ -53,7 +53,12 @@ export default function Experience() {
               >
                 {/* rail + monogram marker */}
                 <div className="relative flex w-10 flex-none flex-col items-center">
-                  <CompanyFavicon url={item.url} monogram={monogram(item.company)} logo={item.logo} />
+                  <CompanyFavicon
+                    url={item.url}
+                    monogram={monogram(item.company)}
+                    logo={item.logo}
+                    invertFavicon={item.invertFavicon}
+                  />
                   {!isLast && (
                     <div
                       className="mt-2 w-px flex-1"

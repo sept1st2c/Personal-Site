@@ -8,19 +8,25 @@ export type ExperienceItem = {
    * isn't the actual recognizable mark for the org. Falls back to the
    * auto-fetched favicon (then the text monogram) when omitted. */
   logo?: string;
+  /** Flips an auto-fetched favicon's colors via CSS filter — for
+   * favicons that are a near-white glyph on transparent, invisible
+   * against this component's own light circular background otherwise
+   * (confirmed by zooming into the rendered RecMaf badge). No-op when
+   * `logo` is set. */
+  invertFavicon?: boolean;
 };
 
 export const experience: ExperienceItem[] = [
   {
     company: "RecMaf",
     url: "https://www.recmaf.com/",
+    invertFavicon: true,
     role: "SDE Intern",
     period: "July 2026 – Present",
     bullets: [
-      "Own the candidate sourcing service on an AI hiring platform with 2K+ profiles and 10+ expert reviewers, serving clients including Tata 1mg and Asian Paints.",
-      "Wrote one adapter contract every source implements, so adding LinkedIn, GitHub or a job board is a new file with no downstream change; 3 sources live today.",
-      "Vendor pulls land raw and immutable, then collapse into one record per person with field-level provenance for every claim on a candidate.",
-      "Screening runs on BullMQ workers backed by Redis, keyed for idempotency and cached on a profile hash, so retries never repeat an LLM call, cutting LLM calls by roughly 20%.",
+      "Own the candidate sourcing service on an AI hiring platform with 2K+ profiles and 10+ expert reviewers, serving clients like Tata 1mg and Asian Paints.",
+      "Wrote one adapter contract every source implements, so adding a new source is just a new file with no downstream change — 3 sources live today.",
+      "Screening runs on BullMQ workers backed by Redis, cached per profile so retries never repeat an LLM call, cutting LLM calls by roughly 20%.",
     ],
   },
   {

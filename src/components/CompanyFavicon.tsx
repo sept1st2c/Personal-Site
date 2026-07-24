@@ -10,15 +10,26 @@ import { useState } from "react";
  *    scraping, no API key, works for any domain).
  * 3. A plain two-letter monogram, if the above 404s or is unreachable —
  *    nothing ever renders as a broken image.
+ *
+ * `invertFavicon` flips an auto-fetched favicon's colors via CSS filter —
+ * needed for RecMaf, whose favicon is a near-white glyph on a transparent
+ * background (confirmed by zooming into the rendered badge: it was
+ * essentially invisible against this component's own light circular
+ * background). `invert()` only touches RGB, not alpha, so the transparent
+ * parts of the icon stay transparent and only the glyph itself darkens.
+ * Never applied to an explicit `logo` override, since those are already
+ * correctly-colored local assets (e.g. gdg.png).
  */
 export default function CompanyFavicon({
   url,
   monogram,
   logo,
+  invertFavicon,
 }: {
   url: string;
   monogram: string;
   logo?: string;
+  invertFavicon?: boolean;
 }) {
   const [failed, setFailed] = useState(false);
   const hostname = (() => {
@@ -47,6 +58,7 @@ export default function CompanyFavicon({
           alt=""
           aria-hidden="true"
           className={logo ? "h-6 w-6 object-contain" : "h-5 w-5"}
+          style={!logo && invertFavicon ? { filter: "invert(1)" } : undefined}
           onError={() => setFailed(true)}
         />
       ) : (
