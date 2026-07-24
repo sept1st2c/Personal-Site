@@ -24,8 +24,8 @@ export const experience: ExperienceItem[] = [
     role: "SDE Intern",
     period: "July 2026 – Present",
     bullets: [
-      "Own the candidate sourcing service on an AI hiring platform with 2K+ profiles and 10+ expert reviewers, serving clients like Tata 1mg and Asian Paints.",
-      "Wrote one adapter contract every source implements, so adding a new source is just a new file with no downstream change — 3 sources live today.",
+      "Own the full candidate pipeline end to end on an AI hiring platform serving clients like Tata 1mg and Asian Paints: sourcing, enrichment, outreach and validation, then an automated voice AI call, an agent led interview, and a final grading step.",
+      "Wrote one adapter contract every source implements, so adding a new source is just a new file with no downstream change. 3 sources live today.",
       "Screening runs on BullMQ workers backed by Redis, cached per profile so retries never repeat an LLM call, cutting LLM calls by roughly 20%.",
     ],
   },
