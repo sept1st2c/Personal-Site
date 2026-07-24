@@ -17,6 +17,7 @@ import {
   LuAudioWaveform,
   LuCloud,
   LuScanEye,
+  LuListOrdered,
 } from "react-icons/lu";
 
 // Brand-icon lookup for the hero tag row. Simple Icons covers most of the
@@ -24,9 +25,10 @@ import {
 // icon set:
 // - AWS: react-icons' Simple Icons build ships no "amazonaws" glyph (Amazon
 //   restricts reuse of its logo mark), so a generic cloud glyph stands in.
-// - LangGraph, LiveKit, AI Agents, Computer Vision: no brand icon exists at
-//   all — each gets a sensible generic icon (network / waveform / circuit /
-//   scan-eye) so no tag renders without one.
+// - LangGraph, LiveKit, AI Agents, Computer Vision, BullMQ: no brand icon
+//   exists at all — each gets a sensible generic icon (network / waveform /
+//   circuit / scan-eye / ordered-list for a job queue) so no tag renders
+//   without one.
 const iconMap: Record<string, IconType> = {
   "Next.js": SiNextdotjs,
   "React.js": SiReact,
@@ -39,6 +41,7 @@ const iconMap: Record<string, IconType> = {
   Docker: SiDocker,
   PostgreSQL: SiPostgresql,
   Redis: SiRedis,
+  BullMQ: LuListOrdered,
   "Computer Vision": LuScanEye,
   JavaScript: SiJavascript,
   Python: SiPython,

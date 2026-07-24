@@ -5,8 +5,7 @@ import { useState } from "react";
 /**
  * Company mark for the Experience timeline. Three tiers:
  * 1. An explicit `logo` override, when the auto-fetched favicon isn't the
- *    org's actual recognizable mark (e.g. GDG chapter sites don't favicon
- *    their own community logo).
+ *    org's actual recognizable mark.
  * 2. The real site favicon (via Google's public favicon service — no
  *    scraping, no API key, works for any domain).
  * 3. A plain two-letter monogram, if the above 404s or is unreachable —

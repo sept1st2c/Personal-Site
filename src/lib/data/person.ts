@@ -24,6 +24,7 @@ export const heroTags = [
   "Docker",
   "PostgreSQL",
   "Redis",
+  "BullMQ",
   "Computer Vision",
 ];
 
